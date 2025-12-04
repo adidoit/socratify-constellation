@@ -1,10 +1,7 @@
 # Supabase CLI configuration for the socratify-constellation project.
 # Update `project_id` with the actual Supabase project ref.
 
-project_id = "socratify-constellation"
+project_id = "kdjioetzqzqzwimukrnw"
 
 [api]
 extra_search_path = ["public"]
-
-[db]
-schema = "public"

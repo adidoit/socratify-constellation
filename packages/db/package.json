@@ -5,6 +5,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "link": "supabase link --project-ref kdjioetzqzqzwimukrnw",
+    "push": "supabase db push",
+    "types": "supabase gen types typescript --schema public > src/types.ts",
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch"
   },
