@@ -36,7 +36,7 @@ The goal is to make it easy to add new apps over time while keeping schema and a
 └─ tsconfig.base.json  # Shared TS config + path aliases
 ```
 
-`apps/template` is a reference app that shows how a product app should be wired. For real apps you will clone this folder and customize.
+`apps/template` is a reference Next.js app wired to the shared Supabase client/types. For real apps you will clone this folder and customize.
 `apps/issue-tree` is an existing product that has been moved into the monorepo and wired to the shared Supabase client/types.
 
 ---
@@ -71,17 +71,13 @@ Initial schema includes:
 
 ### Generating Types
 
-`packages/db/src/types.ts` should be generated from Supabase:
+`packages/db/src/types.ts` is generated from Supabase. Helper scripts are defined in `packages/db/package.json`:
 
-```bash
-pnpm --filter @constellation/db types   # runs Supabase CLI, uses linked project
-```
+- `pnpm --filter @constellation/db link` – link CLI to the project ref (run once per machine after `supabase login`)
+- `pnpm --filter @constellation/db push` – apply migrations to the linked project
+- `pnpm --filter @constellation/db types` – regenerate `src/types.ts` from the linked project
 
-This exports the `Database` type via `packages/db/src/index.ts`, which is used by the shared client and apps:
-
-```ts
-import type { Database } from '@constellation/db';
-```
+`Database` is exported via `packages/db/src/index.ts` for app/client use.
 
 ---
 
@@ -235,18 +231,13 @@ Adding a new app (e.g. `issue-tree`) involves four steps:
 Each app gets its own Vercel project, all pointing at the same GitHub repo.
 
 ### 1. Create Environment Group
+If your Vercel plan supports Environment Groups, create one (e.g. `constellation-supabase`) with:
 
-In Vercel:
+- `NEXT_PUBLIC_SUPABASE_URL = <SUPABASE_URL>`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY = <SUPABASE_ANON_KEY>`
+- `SUPABASE_SERVICE_ROLE_KEY = <SUPABASE_SERVICE_ROLE_KEY>`
 
-1. Go to **Dashboard → Settings → Environment Variables → Environment Groups**.
-2. Create a group, e.g. `constellation-supabase`.
-3. Add (for each environment: Preview / Production as needed):
-
-   - `NEXT_PUBLIC_SUPABASE_URL = <SUPABASE_URL>`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY = <SUPABASE_ANON_KEY>`
-   - `SUPABASE_SERVICE_ROLE_KEY = <SUPABASE_SERVICE_ROLE_KEY>`
-
-Attach this env group to each project you create in the next step.
+If groups are not available, add these three variables directly to each project’s Environment Variables for all environments you use (Production/Preview/Development).
 
 ### 2. Create a Vercel Project per App
 

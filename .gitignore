@@ -28,3 +28,6 @@ pnpm-debug.log*
 supabase/.branches/
 supabase/.temp/
 supabase/.snapshots/
+
+# App artifacts
+apps/whiteboard/public/uploads/
