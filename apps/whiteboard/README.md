@@ -22,6 +22,8 @@ An interview prep whiteboard built with Next.js and Excalidraw, featuring AI-pow
 2. **Set up environment variables** (root `.env.local` or app-specific):
    ```bash
    GEMINI_API_KEY=your_api_key_here
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    ```
    Get your API key from: https://aistudio.google.com/apikey
 
@@ -60,6 +62,7 @@ The AI will provide:
 - **React 19**
 - **Excalidraw** for the canvas
 - **AI SDK v6** with **Google Gemini 2.0 Flash**
+- **Supabase** for auth/session (shared monorepo client)
 - **TypeScript**
 - **Tailwind CSS v4**
 
