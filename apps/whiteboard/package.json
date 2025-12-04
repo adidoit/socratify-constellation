@@ -12,6 +12,7 @@
   "dependencies": {
     "@constellation/db": "workspace:*",
     "@constellation/supabase": "workspace:*",
+    "@constellation/ui": "workspace:*",
     "@supabase/ssr": "^0.8.0",
     "@ai-sdk/google": "^3.0.0-beta.62",
     "@excalidraw/excalidraw": "^0.18.0",

@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "baseUrl": ".",
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+    "types": ["react", "react-dom"],
+    "typeRoots": ["./node_modules/@types", "../../node_modules/@types"],
+    "noEmit": false,
+    "paths": {
+      "@constellation/supabase": ["../supabase/dist/index.d.ts"],
+      "@constellation/db": ["../db/dist/index.d.ts"]
+    }
+  },
+  "include": [
+    "src"
+  ]
+}

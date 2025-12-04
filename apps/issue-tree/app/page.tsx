@@ -4,16 +4,10 @@ import React, { Suspense, useCallback, useEffect, useRef, useState } from "react
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import type { IssueNode } from "@/types";
-import {
-  ArrowRight,
-  Loader2,
-  Megaphone,
-  TrendingDown,
-  TrendingUp,
-} from "lucide-react";
+import { ArrowRight, Loader2, Megaphone, TrendingDown, TrendingUp } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { SocratifyBranding } from "@/components/SocratifyBranding";
-import { SignUpModal } from "@/components/SignUpModal";
+import { MagicLinkModal } from "@constellation/ui";
 
 const PENDING_PROBLEM_KEY = "issue-tree:pending-problem";
 
@@ -303,9 +297,12 @@ const LandingPageContent: React.FC = () => {
         </div>
       </div>
 
-      <SignUpModal
+      <MagicLinkModal
         open={showSignUpModal}
         onClose={() => setShowSignUpModal(false)}
+        siteUrl={process.env.NEXT_PUBLIC_SITE_URL}
+        title="Sign in to continue"
+        subtitle="We’ll email you a magic link to resume your tree."
       />
 
       {isResuming && (

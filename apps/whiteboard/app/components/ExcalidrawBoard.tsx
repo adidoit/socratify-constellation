@@ -4,8 +4,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { exportToBlob, convertToExcalidrawElements } from '@excalidraw/excalidraw';
 import { Streamdown } from 'streamdown';
-import { Loader2, Mail } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+import { useAuthGate } from '@constellation/ui';
 
 // Dynamic import (Excalidraw touches DOM APIs; disable SSR)
 const Excalidraw = dynamic(
@@ -22,12 +21,9 @@ export default function ExcalidrawBoard() {
   const [isCritiquing, setIsCritiquing] = React.useState(false);
   const [critique, setCritique] = React.useState<string | null>(null);
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const [showAuthModal, setShowAuthModal] = React.useState(false);
-  const [authEmail, setAuthEmail] = React.useState('');
-  const [authStatus, setAuthStatus] = React.useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
-  const [authError, setAuthError] = React.useState<string | null>(null);
-
-  const supabase = React.useMemo(() => createClient(), []);
+  const { requireAuth, modal: authModal, openAuthModal } = useAuthGate({
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL,
+  });
 
   // Create example architecture diagram
   const createExampleArchitecture = React.useCallback(() => {
@@ -374,15 +370,8 @@ export default function ExcalidrawBoard() {
   const handleCritique = async () => {
     if (!apiRef.current) return;
 
-    // Require auth before allowing critique
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      setShowAuthModal(true);
-      return;
-    }
+    const user = await requireAuth();
+    if (!user) return;
 
     setIsCritiquing(true);
     setCritique('');
@@ -406,7 +395,7 @@ export default function ExcalidrawBoard() {
       });
 
       if (response.status === 401) {
-        setShowAuthModal(true);
+        openAuthModal();
         return;
       }
 
@@ -517,11 +506,11 @@ export default function ExcalidrawBoard() {
                 {critique !== null ? (
                   <>
                     <div className="flex items-center gap-2 text-heading-sm text-foreground">
-          {isCritiquing && (
-            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-primary" />
-          )}
-          Critique
-        </div>
+                      {isCritiquing && (
+                        <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-primary" />
+                      )}
+                      Critique
+                    </div>
                     <div className="prose prose-sm max-w-none flex-1 overflow-y-auto rounded-lg bg-secondary p-4 text-foreground [&_p]:text-foreground [&_li]:text-foreground [&_strong]:text-foreground [&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground">
                       <Streamdown>{critique}</Streamdown>
                     </div>
@@ -596,119 +585,7 @@ export default function ExcalidrawBoard() {
         </div>
       )}
 
-      {showAuthModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm px-4">
-          <div className="w-full max-w-md rounded-2xl border border-border bg-card shadow-xl">
-            <div className="flex items-center justify-between border-b border-border px-5 py-4">
-              <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                  <Mail className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <div className="text-base font-semibold text-foreground">Sign in to continue</div>
-                  <div className="text-sm text-muted-foreground">We’ll email you a magic link.</div>
-                </div>
-              </div>
-              <button
-                onClick={() => {
-                  if (authStatus !== 'sending') {
-                    setShowAuthModal(false);
-                    setAuthError(null);
-                    setAuthStatus('idle');
-                    setAuthEmail('');
-                  }
-                }}
-                className="text-muted-foreground hover:text-foreground"
-                aria-label="Close"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="px-5 py-4">
-              {authError && (
-                <div className="mb-3 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-                  {authError}
-                </div>
-              )}
-
-              {authStatus === 'sent' ? (
-                <div className="space-y-3 text-sm text-muted-foreground">
-                  <div className="text-foreground text-base font-medium">Check your email</div>
-                  <p>We sent a magic link to <strong className="text-foreground">{authEmail}</strong>.</p>
-                  <p>Click it to finish signing in, then hit Critique again.</p>
-                </div>
-              ) : (
-                <form
-                  className="space-y-3"
-                  onSubmit={async (e) => {
-                    e.preventDefault();
-                    if (!authEmail) return;
-                    setAuthStatus('sending');
-                    setAuthError(null);
-                    try {
-                      const redirectTo = (() => {
-                        try {
-                          const url = new URL(window.location.href);
-                          const next = url.pathname + url.search;
-                          return `${url.origin}/auth/callback?next=${encodeURIComponent(next)}`;
-                        } catch {
-                          return `${window.location.origin}/auth/callback`;
-                        }
-                      })();
-
-                      const { error } = await supabase.auth.signInWithOtp({
-                        email: authEmail,
-                        options: { emailRedirectTo: redirectTo },
-                      });
-
-                      if (error) {
-                        setAuthError(error.message);
-                        setAuthStatus('error');
-                      } else {
-                        setAuthStatus('sent');
-                      }
-                    } catch (err) {
-                      setAuthError(err instanceof Error ? err.message : 'Failed to send link');
-                      setAuthStatus('error');
-                    }
-                  }}
-                >
-                  <label className="block text-sm font-medium text-foreground">
-                    Work or personal email
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={authEmail}
-                    onChange={(e) => setAuthEmail(e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none ring-0 focus:border-primary"
-                    placeholder="you@example.com"
-                    disabled={authStatus === 'sending'}
-                  />
-                  <button
-                    type="submit"
-                    disabled={!authEmail || authStatus === 'sending'}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {authStatus === 'sending' ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        Sending magic link...
-                      </>
-                    ) : (
-                      <>
-                        <Mail className="h-4 w-4" />
-                        Send magic link
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      {authModal}
     </>
   );
 }
