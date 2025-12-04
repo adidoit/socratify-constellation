@@ -1,6 +1,9 @@
 import { ImageResponse } from "next/og";
 import { createClient } from "@/lib/supabase/server";
 import { issueTreeSchema, type IssueTreeJson } from "@/schema/issueTree";
+import type { Database } from "@/lib/supabase/database.types";
+
+type IssueTreeRow = Database["public"]["Tables"]["issue_trees"]["Row"];
 
 export const alt = "Issue tree problem";
 
@@ -21,7 +24,7 @@ export default async function Image({ params }: ImageProps) {
   const supabase = await createClient();
   const { data: tree } = await supabase
     .from("issue_trees")
-    .select("title, tree_json")
+    .select("*")
     .eq("id", id)
     .single();
 
@@ -48,7 +51,8 @@ export default async function Image({ params }: ImageProps) {
     );
   }
 
-  const parsed = issueTreeSchema.parse(tree.tree_json) as IssueTreeJson;
+  const typedTree = tree as IssueTreeRow;
+  const parsed = issueTreeSchema.parse(typedTree.tree_json) as IssueTreeJson;
   const root =
     "root" in (parsed as Record<string, unknown>)
       ? (parsed as Record<string, unknown>).root
@@ -57,8 +61,8 @@ export default async function Image({ params }: ImageProps) {
   const rootContent = (root as { content?: string })?.content;
 
   const title =
-    typeof tree.title === "string" && tree.title.trim().length > 0
-      ? tree.title
+    typeof typedTree.title === "string" && typedTree.title.trim().length > 0
+      ? typedTree.title
       : typeof rootContent === "string" && rootContent.trim().length > 0
         ? rootContent
         : "Untitled problem";

@@ -29,7 +29,7 @@ export async function GET(
   }
 
   // Transform to camelCase for API response
-  const result = (revisions ?? []).map((r) => ({
+  const result = (revisions ?? []).map((r: { id: string; label: string | null; created_at: string }) => ({
     id: r.id,
     label: r.label,
     createdAt: r.created_at,

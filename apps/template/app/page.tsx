@@ -1,6 +1,8 @@
 import { getSupabaseServerClient } from '../lib/supabaseServer';
 import { APP_SLUG } from '../config/app';
 
+export const dynamic = 'force-dynamic';
+
 export default async function TemplateDashboardPage() {
   const supabase = getSupabaseServerClient();
 
@@ -8,7 +10,7 @@ export default async function TemplateDashboardPage() {
     .from('apps')
     .select('id, slug')
     .eq('slug', APP_SLUG)
-    .single();
+    .single<{ id: string; slug: string }>();
 
   if (appError || !app) {
     return (
@@ -22,10 +24,12 @@ export default async function TemplateDashboardPage() {
     );
   }
 
+  const appId = app.id;
+
   const { data: subscriptions, error: subsError } = await supabase
     .from('subscriptions')
     .select('*')
-    .eq('app_id', app.id);
+    .eq('app_id', appId);
 
   return (
     <main>

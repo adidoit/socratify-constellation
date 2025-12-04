@@ -1,8 +1,46 @@
-import { createClient } from "@/lib/supabase/server";
 import type { IssueTreeJson } from "@/schema/issueTree";
 import { getJson, setJson, deleteKey, deleteByPattern } from "./redis";
 import { CACHE_KEYS, CACHE_TTL } from "./cacheHelpers";
-import { toIssueTree, type IssueTree } from "./supabase/database.types";
+import { toIssueTree, type IssueTree, type Database } from "./supabase/database.types";
+import { createServerClient } from "@supabase/ssr";
+import { cookies, headers } from "next/headers";
+
+type IssueTreeRow = Database["public"]["Tables"]["issue_trees"]["Row"];
+type TreeRevisionRow = Database["public"]["Tables"]["tree_revisions"]["Row"];
+
+// Create a properly-typed Supabase client for this module
+async function getTypedSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!url || !anonKey) {
+    throw new Error('Supabase environment variables not set');
+  }
+
+  const cookieStore = await cookies();
+
+  return createServerClient<Database>(url, anonKey, {
+    cookies: {
+      get(name: string) {
+        return cookieStore.get(name)?.value;
+      },
+      set(name: string, value: string, options?: Record<string, unknown>) {
+        try {
+          cookieStore.set(name, value, options);
+        } catch {
+          // Server Component - cookies are read-only
+        }
+      },
+      remove(name: string, options?: Record<string, unknown>) {
+        try {
+          cookieStore.delete(name);
+        } catch {
+          // Server Component - cookies are read-only
+        }
+      }
+    }
+  });
+}
 
 export type CreateIssueTreeInput = {
   title: string;
@@ -38,18 +76,18 @@ export async function createIssueTree(
   input: CreateIssueTreeInput
 ): Promise<IssueTree> {
   const { title, description, treeJson, userId, source } = input;
-  const supabase = await createClient();
+  const supabase = await getTypedSupabaseClient();
 
   const { data, error } = await supabase
     .from("issue_trees")
     .insert({
       title,
       description: description ?? null,
-      tree_json: treeJson,
+      tree_json: treeJson as unknown as Database["public"]["Tables"]["issue_trees"]["Insert"]["tree_json"],
       user_id: userId ?? null,
       source: source ?? "user",
     })
-    .select()
+    .select("*")
     .single();
 
   if (error) {
@@ -67,12 +105,12 @@ export async function updateIssueTreeTreeJson(
   options?: { revisionLabel?: string; semantic?: boolean }
 ): Promise<IssueTree> {
   const REVISION_THROTTLE_MS = 60_000;
-  const supabase = await createClient();
+  const supabase = await getTypedSupabaseClient();
 
   // Get existing tree
   const { data: existing, error: fetchError } = await supabase
     .from("issue_trees")
-    .select()
+    .select("*")
     .eq("id", id)
     .single();
 
@@ -88,7 +126,7 @@ export async function updateIssueTreeTreeJson(
     // Check last revision
     const { data: lastRevision } = await supabase
       .from("tree_revisions")
-      .select("created_at")
+      .select("*")
       .eq("issue_tree_id", id)
       .order("created_at", { ascending: false })
       .limit(1)
@@ -108,16 +146,16 @@ export async function updateIssueTreeTreeJson(
   if (shouldCreateRevision) {
     await supabase.from("tree_revisions").insert({
       issue_tree_id: id,
-      tree_json: existing.tree_json,
+      tree_json: existing.tree_json as unknown as Database["public"]["Tables"]["tree_revisions"]["Insert"]["tree_json"],
       label: options?.revisionLabel ?? null,
     });
   }
 
   const { data: updated, error: updateError } = await supabase
     .from("issue_trees")
-    .update({ tree_json: treeJson })
+    .update({ tree_json: treeJson as unknown as Database["public"]["Tables"]["issue_trees"]["Update"]["tree_json"] })
     .eq("id", id)
-    .select()
+    .select("*")
     .single();
 
   if (updateError || !updated) {
@@ -146,10 +184,10 @@ export async function getIssueTreeById(id: string): Promise<IssueTree | null> {
     // Redis unavailable, continue without cache
   }
 
-  const supabase = await createClient();
+  const supabase = await getTypedSupabaseClient();
   const { data: tree, error } = await supabase
     .from("issue_trees")
-    .select()
+    .select("*")
     .eq("id", id)
     .single();
 
@@ -171,10 +209,10 @@ export async function getIssueTreeById(id: string): Promise<IssueTree | null> {
 export async function getIssueTreesForUser(
   userId: string
 ): Promise<IssueTree[]> {
-  const supabase = await createClient();
+  const supabase = await getTypedSupabaseClient();
   const { data, error } = await supabase
     .from("issue_trees")
-    .select()
+    .select("*")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
@@ -186,12 +224,12 @@ export async function getIssueTreesForUser(
 }
 
 export async function deleteIssueTree(id: string): Promise<IssueTree> {
-  const supabase = await createClient();
+  const supabase = await getTypedSupabaseClient();
 
   // First get the tree to return it
   const { data: existing, error: fetchError } = await supabase
     .from("issue_trees")
-    .select()
+    .select("*")
     .eq("id", id)
     .single();
 
@@ -223,11 +261,11 @@ export async function forkIssueTree(
   userId?: string | null,
   sourceOverride?: string | null
 ): Promise<IssueTree> {
-  const supabase = await createClient();
+  const supabase = await getTypedSupabaseClient();
 
   const { data: source, error: fetchError } = await supabase
     .from("issue_trees")
-    .select()
+    .select("*")
     .eq("id", id)
     .single();
 
@@ -245,7 +283,7 @@ export async function forkIssueTree(
       source: sourceOverride ?? "fork",
       forked_from_id: source.id,
     })
-    .select()
+    .select("*")
     .single();
 
   if (insertError || !forked) {
@@ -273,13 +311,13 @@ export async function getRecentIssueTrees(
     }
   }
 
-  const supabase = await createClient();
+  const supabase = await getTypedSupabaseClient();
   let trees: IssueTree[] = [];
 
   if (userId) {
     const { data, error } = await supabase
       .from("issue_trees")
-      .select()
+      .select("*")
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(limit);
@@ -290,7 +328,7 @@ export async function getRecentIssueTrees(
   } else if (anonClientId) {
     const { data, error } = await supabase
       .from("issue_trees")
-      .select()
+      .select("*")
       .eq("user_id", `anon:${anonClientId}`)
       .order("created_at", { ascending: false })
       .limit(limit);

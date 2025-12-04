@@ -49,7 +49,7 @@ export function toIssueTree(
     userId: row.user_id,
     title: row.title,
     description: row.description,
-    treeJson: row.tree_json as IssueTreeJson,
+    treeJson: row.tree_json as unknown as IssueTreeJson,
     isExample: row.is_example,
     source: row.source,
     forkedFromId: row.forked_from_id,
@@ -65,7 +65,7 @@ export function toTreeRevision(
   return {
     id: row.id,
     issueTreeId: row.issue_tree_id,
-    treeJson: row.tree_json as IssueTreeJson,
+    treeJson: row.tree_json as unknown as IssueTreeJson,
     label: row.label,
     createdAt: row.created_at,
   };

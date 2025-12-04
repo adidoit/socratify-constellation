@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { issueTreeSchema, type IssueTreeJson } from "@/schema/issueTree";
 import IssueTreeEditor from "@/components/IssueTreeEditor";
+import type { Database } from "@/lib/supabase/database.types";
+
+type IssueTreeRow = Database["public"]["Tables"]["issue_trees"]["Row"];
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -20,7 +23,7 @@ export async function generateMetadata(
   const supabase = await createClient();
   const { data: tree } = await supabase
     .from("issue_trees")
-    .select("title")
+    .select("*")
     .eq("id", id)
     .single();
 
@@ -28,9 +31,10 @@ export async function generateMetadata(
     return {};
   }
 
+  const typedTree = tree as IssueTreeRow;
   const title =
-    typeof tree.title === "string" && tree.title.trim().length > 0
-      ? tree.title
+    typeof typedTree.title === "string" && typedTree.title.trim().length > 0
+      ? typedTree.title
       : "Issue tree";
 
   return {
@@ -72,34 +76,37 @@ export default async function TreePage({ params }: PageProps) {
   const supabase = await createClient();
 
   // Fetch the tree with its forked_from relation
-  const { data: tree, error } = await supabase
+  const { data: tree2, error } = await supabase
     .from("issue_trees")
-    .select("id, tree_json, forked_from_id")
+    .select("*")
     .eq("id", id)
     .single();
 
-  if (error || !tree) {
+  if (error || !tree2) {
     notFound();
   }
 
+  const typedTree2 = tree2 as IssueTreeRow;
+
   // Fetch forked_from title if exists
   let forkedFromTitle: string | null = null;
-  if (tree.forked_from_id) {
+  if (typedTree2.forked_from_id) {
     const { data: forkedFrom } = await supabase
       .from("issue_trees")
-      .select("title")
-      .eq("id", tree.forked_from_id)
+      .select("*")
+      .eq("id", typedTree2.forked_from_id)
       .single();
-    forkedFromTitle = forkedFrom?.title ?? null;
+    const typedForkedFrom = forkedFrom as IssueTreeRow | null;
+    forkedFromTitle = typedForkedFrom?.title ?? null;
   }
 
-  const parsed = issueTreeSchema.parse(tree.tree_json) as IssueTreeJson;
+  const parsed = issueTreeSchema.parse(typedTree2.tree_json) as IssueTreeJson;
 
   return (
     <IssueTreeEditor
       initialTree={parsed}
-      treeId={tree.id}
-      forkedFromId={tree.forked_from_id ?? undefined}
+      treeId={typedTree2.id}
+      forkedFromId={typedTree2.forked_from_id ?? undefined}
       forkedFromTitle={forkedFromTitle}
     />
   );

@@ -11,10 +11,11 @@
     "noEmit": true,
     "incremental": true,
     "jsx": "react-jsx",
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"],
+      "@constellation/supabase": ["../../packages/supabase/src"],
+      "@constellation/db": ["../../packages/db/src"]
     },
     "plugins": [
       {
