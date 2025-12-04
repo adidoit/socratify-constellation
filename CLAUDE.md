@@ -15,6 +15,7 @@ pnpm build                # Build all packages (via Turborepo)
 pnpm dev                  # Start all apps in dev mode
 pnpm lint                 # Lint all packages
 pnpm test                 # Run tests in all packages
+pnpm typecheck            # Run TypeScript type checking on all packages
 ```
 
 ### Target specific app/package
@@ -134,3 +135,20 @@ SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
 3. Update `config/app.ts` with app slug and domain
 4. Register app in `apps` table in Supabase
 5. Add app-specific tables via migrations if needed
+
+## Code Quality Requirements
+
+**IMPORTANT:** After making any code changes, you MUST run the following checks:
+
+```bash
+pnpm typecheck            # Verify no TypeScript errors
+pnpm lint                 # Verify no linting errors
+```
+
+For a specific app:
+```bash
+pnpm --filter @constellation/issue-tree typecheck
+pnpm --filter @constellation/issue-tree lint
+```
+
+These checks are mandatory before considering any task complete. Do not skip them.

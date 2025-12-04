@@ -531,7 +531,7 @@ export default function ExcalidrawBoard() {
                     <div className="space-y-2 px-6">
                       <p className="text-heading-sm text-foreground">Draw your architecture</p>
                       <p className="text-body-md">
-                        Sketch on the canvas, then click "Critique" for feedback.
+                        Sketch on the canvas, then click &quot;Critique&quot; for feedback.
                       </p>
                     </div>
                   </div>
