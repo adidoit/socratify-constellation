@@ -21,8 +21,6 @@
     }
   },
   "include": [
-    "src",
-    "stories",
-    ".storybook"
+    "src"
   ]
 }
