@@ -63,7 +63,10 @@ const LandingPageContent: React.FC = () => {
       const trimmed = text.trim();
       if (!trimmed) return;
 
-      if (!isSignedIn) {
+      const hasSessionCookie =
+        typeof document !== "undefined" && document.cookie.includes("sb-access-token");
+
+      if (!isSignedIn && !hasSessionCookie) {
         try {
           localStorage.setItem(PENDING_PROBLEM_KEY, trimmed);
         } catch {

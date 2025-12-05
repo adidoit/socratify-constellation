@@ -163,6 +163,81 @@ being set in the environment.
 
 ---
 
+## E2E (Playwright) Pattern for Any App
+
+Every app can share the same Playwright scaffolding via `@constellation/test-utils`. This keeps auth/setup consistent across 20+ apps.
+
+1. **Copy the config + setup**
+   - Create `apps/<app>/playwright.config.ts`:
+     ```ts
+     import { createPlaywrightConfig } from "@constellation/test-utils/playwright";
+     const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3000"; // adjust port
+     export default createPlaywrightConfig({
+       testDir: "./tests",
+       baseURL: BASE_URL,
+       storageState: "storageState.json",
+       globalSetup: "./tests/global-setup.ts",
+       envFile: "../../.env.test",
+       webServerCommand: "pnpm dev --hostname 127.0.0.1 --port 3000", // match app port
+       webServerUrl: BASE_URL,
+     });
+     ```
+   - Add `apps/<app>/tests/global-setup.ts`:
+     ```ts
+     import { chromium, type FullConfig } from "@playwright/test";
+     import { loginWithMagicLink } from "@constellation/test-utils/playwright";
+
+     const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3000";
+     const REDIRECT_URL =
+       process.env.PLAYWRIGHT_REDIRECT_URL || `${BASE_URL.replace(/\/$/, "")}/auth/callback?next=/`;
+     const TEST_EMAIL = process.env.PLAYWRIGHT_TEST_EMAIL || "testuser@example.com";
+
+     export default async function globalSetup(_config: FullConfig) {
+       const browser = await chromium.launch();
+       const page = await browser.newPage();
+       await loginWithMagicLink(page, {
+         email: TEST_EMAIL,
+         redirectTo: REDIRECT_URL,
+         waitForPathContains: "/auth/callback",
+         baseUrl: BASE_URL,
+       });
+       await page.context().storageState({ path: "storageState.json" });
+       await browser.close();
+     }
+     ```
+   - Write tests in `apps/<app>/tests/*.spec.ts` that assume `storageState.json` already has an authenticated user.
+
+2. **Env for tests** (`.env.test` in repo root; copy from `.env.test.example`)
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=...
+   SUPABASE_SERVICE_ROLE_KEY=...
+   ENABLE_TEST_AUTH_ENDPOINT=true
+   E2E_BYPASS_PROXY=true
+   E2E_SKIP_GEMINI=true          # lets tests stub AI calls
+   NEXT_PUBLIC_E2E_TEST_MODE=true # allow test-only UI shortcuts
+   ```
+   - `SUPABASE_SERVICE_ROLE_KEY` is only for test setup to mint magic links.
+   - Keep `.env.test` out of git.
+
+3. **Auth/session helper endpoint (App Router)**
+   - Add `app/api/test/set-session/route.ts` that calls `supabase.auth.setSession` using the posted tokens.
+   - Guard it with `ENABLE_TEST_AUTH_ENDPOINT` and disable in production.
+   - The shared `loginWithMagicLink` hydrates cookies/localStorage; the endpoint is a fallback for SSR auth.
+
+4. **Run tests per app**
+   ```bash
+   pnpm --filter @constellation/<app> test:e2e
+   ```
+
+5. **Authoring tests**
+   - Prefer UI-driven flows; you already start authenticated.
+   - For slow/external APIs, gate with envs (e.g., `E2E_SKIP_GEMINI`) and return a dummy response in the route handler during tests.
+   - If an app needs to bypass middleware/proxy in tests, honor `E2E_BYPASS_PROXY`.
+
+This pattern is already implemented in `apps/issue-tree` and `apps/whiteboard`; copy/adapt for new apps (update ports/paths as needed).
+
+---
+
 ## Adding a New App
 
 Adding a new app (e.g. `issue-tree`) involves four steps:

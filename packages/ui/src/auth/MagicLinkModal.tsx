@@ -6,6 +6,8 @@ import { createSupabaseBrowserClient } from '@constellation/supabase';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
+import { SocratifyBranding, type SocratifyBrandingProps } from '../branding/SocratifyBranding';
+import { cn } from '../cn';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 type MagicLinkModalProps = {
@@ -16,6 +18,9 @@ type MagicLinkModalProps = {
   title?: string;
   subtitle?: string;
   supabaseClient?: SupabaseClient;
+  showBranding?: boolean;
+  brandingUtmSource?: string;
+  brandingProps?: Partial<Omit<SocratifyBrandingProps, 'utmSource'>>;
 };
 
 function resolveSiteUrl(explicit?: string) {
@@ -41,8 +46,11 @@ export function MagicLinkModal({
   siteUrl,
   logoSrc,
   title = 'Sign in to continue',
-  subtitle = 'We will email you a magic link.',
+  subtitle = 'We’ll send you a magic link from hello@socratify.com.',
   supabaseClient,
+  showBranding = true,
+  brandingUtmSource = 'issuetree',
+  brandingProps,
 }: MagicLinkModalProps) {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
@@ -121,13 +129,11 @@ export function MagicLinkModal({
               <p>We sent a magic link to</p>
               <p className="text-foreground font-semibold">{email}</p>
               <p className="text-xs">Click it to finish signing in, then retry your action.</p>
+              <p className="text-xs">Look for a message from hello@socratify.com.</p>
             </div>
           ) : (
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground" htmlFor="magic-email">
-                  Work or personal email
-                </label>
                 <Input
                   id="magic-email"
                   type="email"
@@ -137,6 +143,7 @@ export function MagicLinkModal({
                   disabled={status === 'sending'}
                   autoFocus
                   className="h-12 text-base"
+                  aria-label="Email"
                   required
                 />
               </div>
@@ -160,6 +167,17 @@ export function MagicLinkModal({
             </form>
           )}
         </div>
+        {showBranding ? (
+          <div className="border-t border-border bg-muted/40 px-6 py-3 text-center">
+            <SocratifyBranding
+              variant="minimal"
+              utmSource={brandingUtmSource}
+              clickable={brandingProps?.clickable ?? false}
+              className={cn('justify-center text-center', brandingProps?.className)}
+              {...brandingProps}
+            />
+          </div>
+        ) : null}
       </DialogContent>
     </Dialog>
   );

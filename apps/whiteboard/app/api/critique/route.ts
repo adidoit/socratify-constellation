@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { streamText } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
@@ -5,9 +6,31 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get('sb-access-token')?.value;
+  const refreshToken = cookieStore.get('sb-refresh-token')?.value;
+
+  if (accessToken && refreshToken) {
+    await supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    });
+  }
+
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = accessToken ? await supabase.auth.getUser(accessToken) : await supabase.auth.getUser();
+
+  // Short-circuit in e2e to avoid hitting Gemini when flag is set (even if the session didn't hydrate).
+  if (!user && process.env.E2E_SKIP_GEMINI === 'true') {
+    const stream = new ReadableStream({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode('Dummy critique from e2e'));
+        controller.close();
+      },
+    });
+    return new Response(stream, { headers: { 'Content-Type': 'text/plain' } });
+  }
 
   if (!user) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {

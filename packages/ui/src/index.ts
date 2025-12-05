@@ -4,3 +4,4 @@ export * from './ui/input';
 export * from './ui/dialog';
 export * from './auth/MagicLinkModal';
 export * from './auth/useAuthGate';
+export * from './branding/SocratifyBranding';

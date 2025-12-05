@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { SocratifyBranding } from "@/components/SocratifyBranding";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2, Mail } from "lucide-react";
@@ -51,7 +52,7 @@ export default function SignInPage() {
               We sent a magic link to <strong>{email}</strong>
             </p>
             <p className="text-xs text-muted-foreground">
-              Click the link in the email to continue.
+              Click the link in the email to continue. Look for a message from hello@socratify.com.
             </p>
           </div>
           <Button
@@ -61,6 +62,10 @@ export default function SignInPage() {
           >
             Use a different email
           </Button>
+          <div className="pt-2 text-center text-[11px] text-muted-foreground space-y-1">
+            <p className="font-semibold uppercase tracking-wide text-foreground">Powered by Socratify</p>
+            <p>Make sure hello@socratify.com is in your safe senders.</p>
+          </div>
         </div>
       </div>
     );
@@ -99,6 +104,13 @@ export default function SignInPage() {
             )}
           </Button>
         </form>
+
+        <div className="text-center text-[11px] text-muted-foreground space-y-2">
+          <p>We send magic links from hello@socratify.com.</p>
+          <div className="flex justify-center">
+            <SocratifyBranding variant="minimal" />
+          </div>
+        </div>
       </div>
     </div>
   );

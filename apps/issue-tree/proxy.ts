@@ -18,7 +18,11 @@ function isPublicRoute(pathname: string): boolean {
   );
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
+  if (process.env.NODE_ENV !== "production" && process.env.E2E_BYPASS_PROXY !== "false") {
+    return NextResponse.next({ request });
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(

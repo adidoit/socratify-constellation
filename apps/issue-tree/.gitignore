@@ -1,7 +1,9 @@
 /.next
 /node_modules
 .env
+.env.*
 .env.local
 .vercel
 .env.rc
 .envrc
+.env.test

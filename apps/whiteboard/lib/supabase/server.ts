@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from '@constellation/supabase';
 export async function createClient() {
   const cookieStore = await cookies();
 
-  return createSupabaseServerClient({
+  const supabase = createSupabaseServerClient({
     cookies: () => ({
       get: (name: string) => cookieStore.get(name),
       set: (name: string, value: string, options?: Record<string, unknown>) => {
@@ -23,4 +23,16 @@ export async function createClient() {
       },
     }),
   });
+
+  // Hydrate a session from test cookies if present
+  const accessToken = cookieStore.get('sb-access-token')?.value;
+  const refreshToken = cookieStore.get('sb-refresh-token')?.value;
+  if (accessToken && refreshToken) {
+    await supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    });
+  }
+
+  return supabase;
 }

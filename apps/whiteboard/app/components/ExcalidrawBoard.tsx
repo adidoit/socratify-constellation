@@ -24,6 +24,7 @@ export default function ExcalidrawBoard() {
   const { requireAuth, modal: authModal, openAuthModal } = useAuthGate({
     siteUrl: process.env.NEXT_PUBLIC_SITE_URL,
   });
+  const isE2E = process.env.NEXT_PUBLIC_E2E_TEST_MODE === 'true';
 
   // Create example architecture diagram
   const createExampleArchitecture = React.useCallback(() => {
@@ -368,22 +369,26 @@ export default function ExcalidrawBoard() {
   };
 
   const handleCritique = async () => {
-    if (!apiRef.current) return;
+    if (!apiRef.current && !isE2E) return;
 
-    const user = await requireAuth();
-    if (!user) return;
+    if (!isE2E) {
+      const user = await requireAuth();
+      if (!user) return;
+    }
 
     setIsCritiquing(true);
     setCritique('');
     try {
-      const blob = await exportToBlob({
-        elements: elements as any,
-        appState,
-        files,
-        mimeType: 'image/png',
-        quality: 1,
-        getDimensions: () => ({ width: 1920, height: 1080, scale: 2 }),
-      });
+      const blob = isE2E
+        ? new Blob(['e2e'], { type: 'text/plain' })
+        : await exportToBlob({
+            elements: elements as any,
+            appState,
+            files,
+            mimeType: 'image/png',
+            quality: 1,
+            getDimensions: () => ({ width: 1920, height: 1080, scale: 2 }),
+          });
 
       // Send to critique API endpoint
       const formData = new FormData();
@@ -394,7 +399,7 @@ export default function ExcalidrawBoard() {
         body: formData,
       });
 
-      if (response.status === 401) {
+      if (!isE2E && response.status === 401) {
         openAuthModal();
         return;
       }

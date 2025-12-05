@@ -16,6 +16,7 @@ pnpm-debug.log*
 # Env files
 .env
 .env.local
+.env.test
 .env.development.local
 .env.test.local
 .env.production.local
@@ -31,3 +32,4 @@ supabase/.snapshots/
 
 # App artifacts
 apps/whiteboard/public/uploads/
+**/storageState.json

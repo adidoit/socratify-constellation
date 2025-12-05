@@ -62,6 +62,7 @@
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@constellation/test-utils": "workspace:*",
     "autoprefixer": "^10.4.0",
     "eslint": "^9.14.0",
     "eslint-config-next": "16.0.7",

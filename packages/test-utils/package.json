@@ -1,0 +1,35 @@
+{
+  "name": "@constellation/test-utils",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./playwright": {
+      "require": "./dist/playwright/index.js",
+      "import": "./dist/playwright/index.js",
+      "types": "./dist/playwright/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepare": "pnpm build"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.86.0",
+    "dotenv": "^16.4.5"
+  },
+  "peerDependencies": {
+    "@playwright/test": "^1.57.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "typescript": "^5.5.0"
+  }
+}

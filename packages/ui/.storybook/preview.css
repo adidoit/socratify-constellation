@@ -1,0 +1,12 @@
+@import "../../../apps/issue-tree/app/globals.css";
+
+:root {
+  --font-geist: 'Geist', system-ui, sans-serif;
+  --font-geist-mono: 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+  --font-poppins: 'Poppins', system-ui, sans-serif;
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}

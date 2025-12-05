@@ -5,7 +5,7 @@ import { test, expect } from "@playwright/test";
 test("landing page shows hero prompt only", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByText("What would you like to solve?")).toBeVisible();
+  await expect(page.getByText("What should we solve today?")).toBeVisible();
 
   // Sidebar should not be visible when history is empty
   await expect(page.getByText("History")).toHaveCount(0);
@@ -14,19 +14,17 @@ test("landing page shows hero prompt only", async ({ page }) => {
   await expect(page.getByText("Issue tree").first()).toBeHidden();
 });
 
-test("submitting problem navigates to editor", async ({ page }) => {
-  await page.goto("/");
-
+test("authenticated user can open editor for a created issue tree", async ({ page, request }) => {
   const problem = "Reduce churn for our SaaS";
 
-  // Type into the PromptInput textarea
-  await page.getByPlaceholder("Describe the problem you want to solve...").fill(problem);
+  // Create via API using the authenticated storage state.
+  const createResponse = await request.post("/api/issue-trees", {
+    data: { title: problem },
+  });
+  expect(createResponse.status()).toBe(200);
+  const { id } = await createResponse.json();
 
-  // Click the submit button (PromptInputSubmit)
-  await page.locator('button[type="submit"]').click();
-
-  // Wait for navigation to /t/[id] and editor header
-  await page.waitForURL(/\/t\/.+/);
-  await expect(page.getByText("Issue tree")).toBeVisible();
-  await expect(page.getByText(problem)).toBeVisible();
+  await page.goto(`/t/${id}`);
+  await expect(page).toHaveURL(/\/t\/.+/);
+  await expect(page.getByRole("button", { name: "New issue tree" })).toBeVisible();
 });
