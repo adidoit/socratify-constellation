@@ -8,6 +8,8 @@ export interface Question {
   text: string;
   company: string;
   logoUrl: string;
+  industry?: string;
+  type?: string;
 }
 
 export interface AnswerState {
@@ -22,18 +24,21 @@ interface QuestionCardProps {
   onClick: (question: Question) => void;
   isSelected?: boolean;
   variant?: "light" | "dark";
+  layout?: "company-only" | "full-context";
   className?: string;
 }
 
-export const InterviewQuestionCard: React.FC<QuestionCardProps> = ({
+export const CompanyInterviewQuestionCard: React.FC<QuestionCardProps> = ({
   question,
   onClick,
   isSelected,
   variant = "light",
+  layout = "company-only",
   className,
 }) => {
   const isDark = variant === "dark";
   const [isPressed, setIsPressed] = useState(false);
+  const showFullContext = layout === "full-context" && (question.industry || question.type);
 
   const handleMouseDown = () => setIsPressed(true);
   const handleMouseUp = () => setIsPressed(false);
@@ -42,6 +47,11 @@ export const InterviewQuestionCard: React.FC<QuestionCardProps> = ({
   const handleClick = () => {
     onClick(question);
   };
+
+  // Build the context line (e.g., "Aviation · Operations")
+  const contextLine = [question.industry, question.type]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <div
@@ -54,7 +64,7 @@ export const InterviewQuestionCard: React.FC<QuestionCardProps> = ({
       className={cn(
         // Base layout
         "group relative flex flex-col justify-between",
-        "w-full max-w-[320px] h-[320px] p-8",
+        "w-full aspect-square p-8",
         "rounded-[28px] cursor-pointer overflow-hidden",
         "select-none",
 
@@ -135,7 +145,7 @@ export const InterviewQuestionCard: React.FC<QuestionCardProps> = ({
         </h3>
       </div>
 
-      {/* Footer: Logo and Company Name */}
+      {/* Footer: Logo and Company Info */}
       <div className="relative flex items-center gap-4 mt-6 z-10">
         {/* Logo container with refined styling */}
         <div
@@ -168,17 +178,44 @@ export const InterviewQuestionCard: React.FC<QuestionCardProps> = ({
           />
         </div>
 
-        {/* Company name with refined typography */}
-        <span
-          className={cn(
-            "text-lg font-medium tracking-[-0.01em]",
-            "transition-colors duration-300",
-            !isDark && "text-stone-500 group-hover:text-stone-700",
-            isDark && "text-zinc-400 group-hover:text-zinc-200"
-          )}
-        >
-          {question.company}
-        </span>
+        {/* Company info section */}
+        {showFullContext ? (
+          // Full context layout: Industry · Function above Company
+          <div className="flex flex-col gap-0.5">
+            <span
+              className={cn(
+                "text-xs font-medium tracking-wide uppercase",
+                "transition-colors duration-300",
+                !isDark && "text-stone-400 group-hover:text-stone-500",
+                isDark && "text-zinc-500 group-hover:text-zinc-400"
+              )}
+            >
+              {contextLine}
+            </span>
+            <span
+              className={cn(
+                "text-lg font-medium tracking-[-0.01em]",
+                "transition-colors duration-300",
+                !isDark && "text-stone-600 group-hover:text-stone-800",
+                isDark && "text-zinc-300 group-hover:text-zinc-100"
+              )}
+            >
+              {question.company}
+            </span>
+          </div>
+        ) : (
+          // Company-only layout
+          <span
+            className={cn(
+              "text-lg font-medium tracking-[-0.01em]",
+              "transition-colors duration-300",
+              !isDark && "text-stone-500 group-hover:text-stone-700",
+              isDark && "text-zinc-400 group-hover:text-zinc-200"
+            )}
+          >
+            {question.company}
+          </span>
+        )}
       </div>
 
       {/* Corner accent - subtle brand touch */}
@@ -210,3 +247,6 @@ export const InterviewQuestionCard: React.FC<QuestionCardProps> = ({
     </div>
   );
 };
+
+// Backward compatibility alias
+export const InterviewQuestionCard = CompanyInterviewQuestionCard;

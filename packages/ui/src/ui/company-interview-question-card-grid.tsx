@@ -3,13 +3,14 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "../cn";
-import { InterviewQuestionCard, Question } from "./interview-question-card";
+import { CompanyInterviewQuestionCard, Question } from "./company-interview-question-card";
 
-interface InterviewQuestionCardGridProps {
+interface CompanyInterviewQuestionCardGridProps {
   questions: Question[];
   onQuestionClick: (question: Question) => void;
   selectedQuestionId?: string | null;
   variant?: "light" | "dark";
+  layout?: "company-only" | "full-context";
   className?: string;
   /** Gap between cards in pixels */
   gap?: number;
@@ -21,13 +22,14 @@ interface InterviewQuestionCardGridProps {
   rows?: 1 | 2;
 }
 
-export const InterviewQuestionCardGrid: React.FC<
-  InterviewQuestionCardGridProps
+export const CompanyInterviewQuestionCardGrid: React.FC<
+  CompanyInterviewQuestionCardGridProps
 > = ({
   questions,
   onQuestionClick,
   selectedQuestionId,
   variant = "light",
+  layout = "company-only",
   className,
   gap = 24,
   showArrows = true,
@@ -275,11 +277,12 @@ export const InterviewQuestionCardGrid: React.FC<
                 }
               }}
             >
-              <InterviewQuestionCard
+              <CompanyInterviewQuestionCard
                 question={question}
                 onClick={onQuestionClick}
                 isSelected={selectedQuestionId === question.id}
                 variant={variant}
+                layout={layout}
               />
             </div>
           ))
@@ -297,12 +300,13 @@ export const InterviewQuestionCardGrid: React.FC<
               }}
             >
               {columnQuestions.map((question) => (
-                <InterviewQuestionCard
+                <CompanyInterviewQuestionCard
                   key={question.id}
                   question={question}
                   onClick={onQuestionClick}
                   isSelected={selectedQuestionId === question.id}
                   variant={variant}
+                  layout={layout}
                 />
               ))}
             </div>
@@ -340,3 +344,6 @@ export const InterviewQuestionCardGrid: React.FC<
     </div>
   );
 };
+
+// Backward compatibility alias
+export const InterviewQuestionCardGrid = CompanyInterviewQuestionCardGrid;

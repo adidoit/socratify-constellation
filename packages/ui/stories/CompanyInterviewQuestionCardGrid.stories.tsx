@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { InterviewQuestionCardGrid } from '../src/ui/interview-question-card-grid';
-import { Question } from '../src/ui/interview-question-card';
+import { CompanyInterviewQuestionCardGrid } from '../src/ui/company-interview-question-card-grid';
+import { Question } from '../src/ui/company-interview-question-card';
 
 const sampleQuestions: Question[] = [
   {
@@ -54,13 +54,81 @@ const sampleQuestions: Question[] = [
   },
 ];
 
+const sampleQuestionsWithContext: Question[] = [
+  {
+    id: '1',
+    text: 'What are the key drivers of airline profitability?',
+    company: 'McKinsey',
+    logoUrl: 'https://logo.clearbit.com/mckinsey.com',
+    industry: 'Aviation',
+    type: 'Operations',
+  },
+  {
+    id: '2',
+    text: 'How would you reduce costs in a hospital system?',
+    company: 'BCG',
+    logoUrl: 'https://logo.clearbit.com/bcg.com',
+    industry: 'Healthcare',
+    type: 'Strategy',
+  },
+  {
+    id: '3',
+    text: 'Design a go-to-market strategy for a new EV',
+    company: 'Bain',
+    logoUrl: 'https://logo.clearbit.com/bain.com',
+    industry: 'Automotive',
+    type: 'Marketing',
+  },
+  {
+    id: '4',
+    text: 'Evaluate the M&A opportunity for a fintech startup',
+    company: 'Goldman Sachs',
+    logoUrl: 'https://logo.clearbit.com/goldmansachs.com',
+    industry: 'Financial Services',
+    type: 'M&A',
+  },
+  {
+    id: '5',
+    text: 'Develop a pricing strategy for cloud services',
+    company: 'Deloitte',
+    logoUrl: 'https://logo.clearbit.com/deloitte.com',
+    industry: 'Technology',
+    type: 'Pricing',
+  },
+  {
+    id: '6',
+    text: 'Optimize supply chain for retail operations',
+    company: 'Accenture',
+    logoUrl: 'https://logo.clearbit.com/accenture.com',
+    industry: 'Retail',
+    type: 'Supply Chain',
+  },
+  {
+    id: '7',
+    text: 'Due diligence for a private equity acquisition',
+    company: 'KKR',
+    logoUrl: 'https://logo.clearbit.com/kkr.com',
+    industry: 'Private Equity',
+    type: 'Due Diligence',
+  },
+  {
+    id: '8',
+    text: 'Market entry strategy for emerging markets',
+    company: 'Oliver Wyman',
+    logoUrl: 'https://logo.clearbit.com/oliverwyman.com',
+    industry: 'Consumer Goods',
+    type: 'Market Entry',
+  },
+];
+
 const meta = {
-  title: 'Components/InterviewQuestionCardGrid',
-  component: InterviewQuestionCardGrid,
+  title: 'Components/CompanyInterviewQuestionCardGrid',
+  component: CompanyInterviewQuestionCardGrid,
   args: {
     questions: sampleQuestions,
     onQuestionClick: (q: Question) => console.log('Clicked:', q.text),
     variant: 'light',
+    layout: 'company-only',
     showArrows: true,
     showIndicators: true,
     gap: 24,
@@ -70,6 +138,10 @@ const meta = {
     variant: {
       control: 'select',
       options: ['light', 'dark'],
+    },
+    layout: {
+      control: 'select',
+      options: ['company-only', 'full-context'],
     },
     showArrows: {
       control: 'boolean',
@@ -97,7 +169,7 @@ const meta = {
       ],
     },
   },
-} satisfies Meta<typeof InterviewQuestionCardGrid>;
+} satisfies Meta<typeof CompanyInterviewQuestionCardGrid>;
 
 export default meta;
 
@@ -113,7 +185,7 @@ export const Light: Story = {
         <p className="text-stone-600 mb-8 px-14">
           Select a question to start practicing
         </p>
-        <InterviewQuestionCardGrid {...args} />
+        <CompanyInterviewQuestionCardGrid {...args} />
       </div>
     </div>
   ),
@@ -135,7 +207,54 @@ export const Dark: Story = {
         <p className="text-zinc-400 mb-8 px-14">
           Select a question to start practicing
         </p>
-        <InterviewQuestionCardGrid {...args} />
+        <CompanyInterviewQuestionCardGrid {...args} />
+      </div>
+    </div>
+  ),
+  parameters: {
+    backgrounds: { default: 'darker' },
+  },
+};
+
+export const FullContextLight: Story = {
+  args: {
+    questions: sampleQuestionsWithContext,
+    layout: 'full-context',
+  },
+  render: (args) => (
+    <div className="py-12 bg-stone-100 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-3xl font-bold text-stone-900 mb-2 px-14">
+          Case Interview Questions
+        </h2>
+        <p className="text-stone-600 mb-8 px-14">
+          Practice with real consulting interview questions
+        </p>
+        <CompanyInterviewQuestionCardGrid {...args} />
+      </div>
+    </div>
+  ),
+  parameters: {
+    backgrounds: { default: 'light-gray' },
+  },
+};
+
+export const FullContextDark: Story = {
+  args: {
+    questions: sampleQuestionsWithContext,
+    layout: 'full-context',
+    variant: 'dark',
+  },
+  render: (args) => (
+    <div className="py-12 bg-zinc-950 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-3xl font-bold text-zinc-100 mb-2 px-14">
+          Case Interview Questions
+        </h2>
+        <p className="text-zinc-400 mb-8 px-14">
+          Practice with real consulting interview questions
+        </p>
+        <CompanyInterviewQuestionCardGrid {...args} />
       </div>
     </div>
   ),
@@ -159,7 +278,7 @@ export const WithSelection: Story = {
               ? `Selected: ${sampleQuestions.find((q) => q.id === selectedId)?.text}`
               : 'Click a card to select it'}
           </p>
-          <InterviewQuestionCardGrid
+          <CompanyInterviewQuestionCardGrid
             {...args}
             selectedQuestionId={selectedId}
             onQuestionClick={(q) => setSelectedId(q.id)}
@@ -173,25 +292,26 @@ export const WithSelection: Story = {
   },
 };
 
-export const DarkWithSelection: Story = {
+export const FullContextWithSelection: Story = {
   args: {
-    variant: 'dark',
+    questions: sampleQuestionsWithContext,
+    layout: 'full-context',
   },
   render: function Render(args) {
     const [selectedId, setSelectedId] = useState<string | null>(null);
 
     return (
-      <div className="py-12 bg-zinc-950 min-h-screen">
+      <div className="py-12 bg-stone-100 min-h-screen">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-zinc-100 mb-2 px-14">
-            Practice Questions
+          <h2 className="text-3xl font-bold text-stone-900 mb-2 px-14">
+            Case Interview Questions
           </h2>
-          <p className="text-zinc-400 mb-8 px-14">
+          <p className="text-stone-600 mb-8 px-14">
             {selectedId
-              ? `Selected: ${sampleQuestions.find((q) => q.id === selectedId)?.text}`
+              ? `Selected: ${sampleQuestionsWithContext.find((q) => q.id === selectedId)?.text}`
               : 'Click a card to select it'}
           </p>
-          <InterviewQuestionCardGrid
+          <CompanyInterviewQuestionCardGrid
             {...args}
             selectedQuestionId={selectedId}
             onQuestionClick={(q) => setSelectedId(q.id)}
@@ -201,26 +321,56 @@ export const DarkWithSelection: Story = {
     );
   },
   parameters: {
-    backgrounds: { default: 'darker' },
+    backgrounds: { default: 'light-gray' },
   },
 };
 
-export const FewCards: Story = {
+export const TwoRowsFullContext: Story = {
   args: {
-    questions: sampleQuestions.slice(0, 3),
+    questions: sampleQuestionsWithContext,
+    layout: 'full-context',
+    rows: 2,
   },
   render: (args) => (
     <div className="py-12 bg-stone-100 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-stone-900 mb-8 px-14">
-          Featured Questions
+        <h2 className="text-3xl font-bold text-stone-900 mb-2 px-14">
+          Browse All Case Questions
         </h2>
-        <InterviewQuestionCardGrid {...args} />
+        <p className="text-stone-600 mb-8 px-14">
+          Explore our full collection of consulting interview questions
+        </p>
+        <CompanyInterviewQuestionCardGrid {...args} />
       </div>
     </div>
   ),
   parameters: {
     backgrounds: { default: 'light-gray' },
+  },
+};
+
+export const TwoRowsFullContextDark: Story = {
+  args: {
+    questions: sampleQuestionsWithContext,
+    layout: 'full-context',
+    rows: 2,
+    variant: 'dark',
+  },
+  render: (args) => (
+    <div className="py-12 bg-zinc-950 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-3xl font-bold text-zinc-100 mb-2 px-14">
+          Browse All Case Questions
+        </h2>
+        <p className="text-zinc-400 mb-8 px-14">
+          Explore our full collection of consulting interview questions
+        </p>
+        <CompanyInterviewQuestionCardGrid {...args} />
+      </div>
+    </div>
+  ),
+  parameters: {
+    backgrounds: { default: 'darker' },
   },
 };
 
@@ -237,32 +387,12 @@ export const NoArrows: Story = {
         <p className="text-stone-600 mb-8 px-14">
           Drag or swipe to see more questions
         </p>
-        <InterviewQuestionCardGrid {...args} />
+        <CompanyInterviewQuestionCardGrid {...args} />
       </div>
     </div>
   ),
   parameters: {
     backgrounds: { default: 'light-gray' },
-  },
-};
-
-export const MinimalIndicators: Story = {
-  args: {
-    showArrows: false,
-    showIndicators: true,
-  },
-  render: (args) => (
-    <div className="py-12 bg-zinc-950 min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-zinc-100 mb-8 px-14">
-          Minimal Style
-        </h2>
-        <InterviewQuestionCardGrid {...args} variant="dark" />
-      </div>
-    </div>
-  ),
-  parameters: {
-    backgrounds: { default: 'darker' },
   },
 };
 
@@ -279,7 +409,7 @@ export const TwoRowsLight: Story = {
         <p className="text-stone-600 mb-8 px-14">
           Explore our full collection of interview questions
         </p>
-        <InterviewQuestionCardGrid {...args} />
+        <CompanyInterviewQuestionCardGrid {...args} />
       </div>
     </div>
   ),
@@ -302,75 +432,10 @@ export const TwoRowsDark: Story = {
         <p className="text-zinc-400 mb-8 px-14">
           Explore our full collection of interview questions
         </p>
-        <InterviewQuestionCardGrid {...args} />
+        <CompanyInterviewQuestionCardGrid {...args} />
       </div>
     </div>
   ),
-  parameters: {
-    backgrounds: { default: 'darker' },
-  },
-};
-
-export const TwoRowsWithSelection: Story = {
-  args: {
-    rows: 2,
-  },
-  render: function Render(args) {
-    const [selectedId, setSelectedId] = useState<string | null>(null);
-
-    return (
-      <div className="py-12 bg-stone-100 min-h-screen">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-stone-900 mb-2 px-14">
-            Select a Question
-          </h2>
-          <p className="text-stone-600 mb-8 px-14">
-            {selectedId
-              ? `Selected: ${sampleQuestions.find((q) => q.id === selectedId)?.text}`
-              : 'Click any card to select it'}
-          </p>
-          <InterviewQuestionCardGrid
-            {...args}
-            selectedQuestionId={selectedId}
-            onQuestionClick={(q) => setSelectedId(q.id)}
-          />
-        </div>
-      </div>
-    );
-  },
-  parameters: {
-    backgrounds: { default: 'light-gray' },
-  },
-};
-
-export const TwoRowsDarkWithSelection: Story = {
-  args: {
-    rows: 2,
-    variant: 'dark',
-  },
-  render: function Render(args) {
-    const [selectedId, setSelectedId] = useState<string | null>(null);
-
-    return (
-      <div className="py-12 bg-zinc-950 min-h-screen">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-zinc-100 mb-2 px-14">
-            Select a Question
-          </h2>
-          <p className="text-zinc-400 mb-8 px-14">
-            {selectedId
-              ? `Selected: ${sampleQuestions.find((q) => q.id === selectedId)?.text}`
-              : 'Click any card to select it'}
-          </p>
-          <InterviewQuestionCardGrid
-            {...args}
-            selectedQuestionId={selectedId}
-            onQuestionClick={(q) => setSelectedId(q.id)}
-          />
-        </div>
-      </div>
-    );
-  },
   parameters: {
     backgrounds: { default: 'darker' },
   },
