@@ -16,6 +16,7 @@
     "@ai-sdk/openai": "^1.2.8",
     "@ai-sdk/react": "^2.0.104",
     "@constellation/db": "workspace:*",
+    "@constellation/content-pages": "workspace:*",
     "@constellation/supabase": "workspace:*",
     "@constellation/ui": "workspace:*",
     "@radix-ui/react-collapsible": "^1.1.12",

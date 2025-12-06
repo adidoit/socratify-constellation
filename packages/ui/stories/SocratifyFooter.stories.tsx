@@ -16,8 +16,16 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Default footer using semantic CSS variables.
+ * Theme adapts automatically based on the `dark` class on document root.
+ * Use Storybook's theme switcher to toggle between light and dark modes.
+ */
 export const Default: Story = {};
 
+/**
+ * Footer with custom company and social links.
+ */
 export const CustomLinks: Story = {
   args: {
     companyLinks: [
@@ -34,29 +42,54 @@ export const CustomLinks: Story = {
       { name: 'YouTube', href: 'https://www.youtube.com/@socratify', icon: <Youtube className="h-5 w-5" /> },
     ],
     contactEmail: 'partners@socratify.com',
-    subscribeDescription: 'Monthly updates on new releases and research drops.',
   },
 };
 
+/**
+ * Footer with email subscription form enabled.
+ */
 export const WithSubscribe: Story = {
   args: {
     enableSubscribe: true,
+    subscribeDescription: 'Monthly updates on new releases and research drops.',
     onSubscribe: async () => {
       await new Promise((resolve) => setTimeout(resolve, 400));
     },
   },
 };
 
-export const LightMode: Story = {
+/**
+ * Footer in dark mode.
+ * Uses the Storybook theme addon to force dark mode.
+ */
+export const DarkMode: Story = {
+  parameters: {
+    themes: {
+      themeOverride: 'dark',
+    },
+    backgrounds: {
+      default: 'dark',
+    },
+  },
+};
+
+/**
+ * Footer with subscription form in dark mode.
+ */
+export const DarkModeWithSubscribe: Story = {
   args: {
-    theme: 'light',
-    companyLinks: [
-      { name: 'About', href: '/about' },
-      { name: 'Docs', href: '/docs' },
-    ],
-    legalLinks: [
-      { name: 'Terms', href: '/terms' },
-      { name: 'Privacy', href: '/privacy' },
-    ],
+    enableSubscribe: true,
+    subscribeDescription: 'Monthly updates on new releases and research drops.',
+    onSubscribe: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 400));
+    },
+  },
+  parameters: {
+    themes: {
+      themeOverride: 'dark',
+    },
+    backgrounds: {
+      default: 'dark',
+    },
   },
 };

@@ -1,14 +1,33 @@
-import { AppShell } from "@/components/AppShell";
+import path from "path";
+import { BlogIndex } from "@constellation/content-pages";
+import { loadBlogPosts } from "@constellation/content-pages/loader";
+import { generateBlogIndexMetadata } from "@constellation/content-pages/seo";
+import { siteConfig, contentPaths } from "@/lib/site-config";
 
-export default function BlogPage() {
+const BLOG_DIR = path.join(process.cwd(), contentPaths.blog);
+
+// Load all blog posts at build time (static generation)
+const posts = loadBlogPosts(BLOG_DIR);
+
+// Generate SEO metadata
+export const metadata = generateBlogIndexMetadata({
+  site: siteConfig,
+  title: "Blog",
+  description: "Articles about structured problem solving, MECE frameworks, and strategic thinking.",
+});
+
+export default function BlogIndexPage() {
   return (
-    <AppShell>
-      <div className="flex-1 flex flex-col items-center justify-center px-4">
-        <h1 className="text-display-lg text-center mb-4">Blog</h1>
-        <p className="text-muted-foreground text-center max-w-md">
-          This page is coming soon.
-        </p>
-      </div>
-    </AppShell>
+    <BlogIndex
+      posts={posts}
+      baseUrl={siteConfig.url}
+      siteName={siteConfig.name}
+      title="Blog"
+      description="Articles about structured problem solving, MECE frameworks, and strategic thinking."
+      backLink={{
+        href: "/",
+        label: "Back to IssueTree",
+      }}
+    />
   );
 }

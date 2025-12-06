@@ -187,6 +187,17 @@ export async function POST(req: NextRequest) {
       explanation: z.string().optional(),
     });
 
+    // Allow automated tests to bypass live Gemini calls.
+    if (req.headers.get("x-mock-ai") === "1" || process.env.MOCK_AI === "1") {
+      return Response.json({
+        proposedNode: {
+          content: `Mock ${mode} node for ${targetNode.content}`,
+          type: targetNode.type,
+        },
+        explanation: "Mock AI response for testing without Gemini.",
+      });
+    }
+
     const { object } = await generateObject({
       model: geminiModel,
       schema: responseSchema,

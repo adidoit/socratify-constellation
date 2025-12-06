@@ -5,7 +5,8 @@ module.exports = {
       "./app/**/*.{js,ts,jsx,tsx}",
       "./components/**/*.{js,ts,jsx,tsx}",
       "./node_modules/streamdown/dist/**/*.js",
-      "../../packages/ui/src/**/*.{js,ts,jsx,tsx}"
+      "../../packages/ui/src/**/*.{js,ts,jsx,tsx}",
+      "../../packages/content-pages/src/**/*.{js,ts,jsx,tsx}"
     ],
   theme: {
   	extend: {

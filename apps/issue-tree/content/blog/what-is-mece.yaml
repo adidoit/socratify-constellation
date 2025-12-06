@@ -1,0 +1,93 @@
+slug: blog/what-is-mece
+meta:
+  title: What is MECE? The Framework Behind Clear Thinking | IssueTree
+  description: Learn how the MECE framework helps you break down complex problems without gaps or overlaps. Used by top consultants at McKinsey, BCG, and Bain.
+  section: Frameworks
+  keywords:
+    - MECE
+    - MECE framework
+    - problem solving
+    - consulting frameworks
+    - strategic thinking
+    - issue trees
+    - McKinsey
+    - structured problem solving
+  publishedAt: "2024-12-01"
+  author: Socratify Team
+
+hero:
+  label: Frameworks
+  title: What is MECE? The framework behind clear thinking
+  subtitle: MECE stands for Mutually Exclusive, Collectively Exhaustive—a principle that ensures your analysis covers everything without redundancy.
+
+content:
+  - type: paragraph
+    text: |
+      If you've ever tried to solve a complex problem and felt like you were going in circles, you're not alone. The challenge isn't usually a lack of effort—it's a lack of structure.
+
+  - type: paragraph
+    text: |
+      MECE (pronounced "me-see") is a framework that fixes this. It forces you to break problems into parts that don't overlap and together cover everything. No gaps, no redundancy.
+
+  - type: heading
+    level: 2
+    text: Mutually Exclusive means no overlap
+
+  - type: paragraph
+    text: |
+      When your categories are mutually exclusive, each item belongs to exactly one bucket. There's no ambiguity about where something fits.
+
+  - type: paragraph
+    text: |
+      For example, if you're analyzing a company's revenue sources, "Product Sales" and "Service Revenue" are mutually exclusive. But "Product Sales" and "US Sales" are not—a product sale in the US would be counted twice.
+
+  - type: heading
+    level: 2
+    text: Collectively Exhaustive means no gaps
+
+  - type: paragraph
+    text: |
+      Your categories must cover the entire space. If you're analyzing all possible causes of a problem, you shouldn't be able to point to a cause that doesn't fit any category.
+
+  - type: paragraph
+    text: |
+      This is where many analyses fail. It's easy to list the obvious factors and miss the ones that matter most.
+
+  - type: heading
+    level: 2
+    text: Why consultants swear by MECE
+
+  - type: paragraph
+    text: |
+      Strategy consultants at firms like McKinsey, BCG, and Bain use MECE religiously. It's not just a nice-to-have—it's foundational to how they think.
+
+  - type: list
+    style: bullet
+    items:
+      - It creates clarity in ambiguous situations
+      - It builds confidence that nothing important was missed
+      - It makes communication easier because the logic is transparent
+      - It scales from simple problems to massive strategic questions
+
+  - type: heading
+    level: 2
+    text: How IssueTree helps you think in MECE
+
+  - type: paragraph
+    text: |
+      Building MECE frameworks is hard. Your brain naturally wants to think in overlapping, incomplete ways. IssueTree's AI acts as a thinking partner that challenges you to fill gaps and remove overlaps.
+
+  - type: paragraph
+    text: |
+      Start with a question, and IssueTree helps you decompose it into MECE sub-questions. Each branch is checked for completeness and exclusivity, so you can trust your analysis.
+
+cta:
+  title: Try MECE thinking today
+  description: Build your first issue tree and see how MECE frameworks change the way you solve problems.
+  primaryButton:
+    text: Get started
+    href: /
+
+backLink:
+  href: /blog
+  label: Back to Blog

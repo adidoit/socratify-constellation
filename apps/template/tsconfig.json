@@ -14,6 +14,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@constellation/content-pages": ["../../packages/content-pages/src"],
+      "@constellation/content-pages/loader": ["../../packages/content-pages/src/loader"],
+      "@constellation/content-pages/seo": ["../../packages/content-pages/src/seo"],
+      "@constellation/supabase": ["../../packages/supabase/src"]
+    },
     "plugins": [
       {
         "name": "next"

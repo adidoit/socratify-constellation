@@ -1,0 +1,90 @@
+slug: architecture-diagrams-that-communicate
+meta:
+  title: "Architecture Diagrams That Actually Communicate | Blog"
+  description: "Learn how to create architecture diagrams that tell a story and help your team understand complex systems."
+  section: "Guides"
+  keywords:
+    - architecture diagrams
+    - system design
+    - visual communication
+    - software architecture
+  publishedAt: "2024-01-15"
+  author: "Socratify Team"
+
+hero:
+  label: Guide
+  title: Architecture Diagrams That Actually Communicate
+  subtitle: Stop making diagrams that confuse. Start making diagrams that clarify.
+
+content:
+  - type: paragraph
+    text: |
+      We've all seen them - architecture diagrams that look impressive but leave 
+      everyone more confused than before. Boxes everywhere, arrows pointing in 
+      every direction, and no clear story being told.
+
+  - type: paragraph
+    text: |
+      Great architecture diagrams aren't about showing everything. They're about 
+      showing the right things to the right audience at the right level of detail.
+
+  - type: heading
+    level: 2
+    text: The Problem with Most Diagrams
+
+  - type: paragraph
+    text: |
+      Most architecture diagrams fail because they try to do too much. They show 
+      every component, every connection, every detail - and in doing so, they 
+      communicate nothing.
+
+  - type: list
+    style: bullet
+    items:
+      - Too many boxes (everything is "important")
+      - Inconsistent abstraction levels
+      - No clear reading order
+      - Missing context about what matters
+
+  - type: heading
+    level: 2
+    text: A Better Approach
+
+  - type: paragraph
+    text: |
+      Start with a question: What decision does this diagram need to support? 
+      That single question will guide everything else - what to include, what 
+      to leave out, and how to organize the visual hierarchy.
+
+  - type: blockquote
+    text: "A diagram should answer a question, not just describe a system."
+
+  - type: heading
+    level: 2
+    text: Three Levels of Architecture Diagrams
+
+  - type: list
+    style: numbered
+    items:
+      - "Context: How does the system fit into the bigger picture?"
+      - "Containers: What are the major deployable units?"
+      - "Components: How is a container organized internally?"
+
+  - type: paragraph
+    text: |
+      Pick one level per diagram. Mixing levels is the fastest way to create 
+      confusion.
+
+cta:
+  title: Try it yourself
+  description: Open a whiteboard and practice creating focused architecture diagrams.
+  primaryButton:
+    text: Start Drawing
+    href: /whiteboard
+  secondaryButton:
+    text: See Examples
+    href: /examples
+
+backLink:
+  href: /blog
+  label: Back to Blog

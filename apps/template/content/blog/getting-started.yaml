@@ -1,0 +1,79 @@
+slug: getting-started
+meta:
+  title: "Getting Started with Your App | Blog"
+  description: "A comprehensive guide to getting started with our platform. Learn the basics and start building today."
+  section: "Guides"
+  keywords:
+    - getting started
+    - tutorial
+    - guide
+    - beginner
+  publishedAt: "2024-01-15"
+  author: "Your Team"
+
+hero:
+  label: Guide
+  title: Getting Started with Your App
+  subtitle: Everything you need to know to hit the ground running.
+
+content:
+  - type: paragraph
+    text: |
+      Welcome to your first blog post! This template shows you how to create 
+      engaging content using the YAML-driven content system. Each post is a 
+      simple YAML file that gets rendered as a beautiful, SEO-optimized page.
+
+  - type: heading
+    level: 2
+    text: Why YAML for Content?
+
+  - type: paragraph
+    text: |
+      YAML is human-readable and easy to write. Unlike traditional CMS platforms,
+      your content lives in your codebase, making it version-controlled and 
+      deployable with your app.
+
+  - type: list
+    style: numbered
+    items:
+      - No database required for content
+      - Full version control with Git
+      - Easy to edit and review in PRs
+      - Deploy content with your code
+
+  - type: heading
+    level: 2
+    text: Content Block Types
+
+  - type: paragraph
+    text: |
+      You can use various content block types to structure your articles:
+      paragraphs, headings (h2, h3), images, blockquotes, lists, and videos.
+
+  - type: blockquote
+    text: "Content is king, but distribution is queen, and she wears the pants."
+    attribution: Jonathan Perelman
+
+  - type: heading
+    level: 2
+    text: Next Steps
+
+  - type: paragraph
+    text: |
+      Now that you understand the basics, try creating your own blog post.
+      Just add a new YAML file to the content/blog directory and it will
+      automatically appear on your blog index page.
+
+cta:
+  title: Ready to dive deeper?
+  description: Check out our documentation for advanced features and customization options.
+  primaryButton:
+    text: View Documentation
+    href: /docs
+  secondaryButton:
+    text: Contact Support
+    href: /contact
+
+backLink:
+  href: /blog
+  label: Back to Blog

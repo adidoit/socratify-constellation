@@ -1,0 +1,63 @@
+slug: about
+meta:
+  title: About IssueTree | Problem Solve App by Socratify
+  description: Learn how IssueTree helps you break down complex problems using structured thinking and AI-powered MECE frameworks.
+  section: About
+
+hero:
+  label: About
+  title: Structured thinking for complex problems
+  subtitle: IssueTree is an AI-native tool that helps you decompose any problem into mutually exclusive, collectively exhaustive (MECE) components.
+
+content:
+  - type: paragraph
+    text: |
+      Complex problems don't have simple answers. But they do have structure.
+      IssueTree helps you find it.
+
+  - type: heading
+    level: 2
+    text: Why structured problem solving?
+
+  - type: paragraph
+    text: |
+      The best strategy consultants, product managers, and executives share one skill: they can break any problem into its component parts. This structured approach reveals what matters most and where to focus your effort.
+
+  - type: list
+    style: bullet
+    items:
+      - Break problems into mutually exclusive, collectively exhaustive (MECE) parts
+      - Identify the highest-leverage areas to focus on
+      - Build conviction through systematic analysis
+      - Communicate complex ideas with clarity
+
+  - type: heading
+    level: 2
+    text: How IssueTree works
+
+  - type: paragraph
+    text: |
+      Start with a question. IssueTree's AI helps you decompose it into sub-questions, each one breaking down further until you reach actionable insights. Every branch is MECE—no gaps, no overlaps.
+
+  - type: paragraph
+    text: |
+      Whether you're diagnosing why revenue is down, exploring product strategy, or preparing for a difficult conversation, IssueTree gives you a thinking partner that helps you see the full picture.
+
+  - type: heading
+    level: 2
+    text: Built by Socratify
+
+  - type: paragraph
+    text: |
+      IssueTree is part of the Socratify family of thinking tools. We believe the best AI applications don't think for you—they help you think better.
+
+cta:
+  title: Start solving problems
+  description: Try IssueTree free and see how structured thinking changes your approach.
+  primaryButton:
+    text: Get started
+    href: /
+
+backLink:
+  href: /
+  label: Back to IssueTree

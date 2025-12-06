@@ -16,6 +16,15 @@
       "@constellation/supabase": [
         "packages/supabase/src"
       ],
+      "@constellation/content-pages": [
+        "packages/content-pages/src"
+      ],
+      "@constellation/content-pages/loader": [
+        "packages/content-pages/src/loader"
+      ],
+      "@constellation/content-pages/seo": [
+        "packages/content-pages/src/seo"
+      ],
       "@constellation/test-utils": [
         "packages/test-utils/src"
       ],

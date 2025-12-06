@@ -32,7 +32,6 @@ export type SocratifyFooterProps = {
   companyLinks?: FooterLink[];
   legalLinks?: FooterLink[];
   socialLinks?: FooterSocialLink[];
-  theme?: "dark" | "light";
   enableSubscribe?: boolean;
   subscribeCta?: string;
   subscribeDescription?: string;
@@ -113,7 +112,6 @@ export function SocratifyFooter({
   socialLinks = defaultSocialLinks,
   companyLinks = defaultCompanyLinks,
   legalLinks = defaultLegalLinks,
-  theme = "dark",
   enableSubscribe = false,
   subscribeCta = "Keep up with us.",
   subscribeDescription = "Get news, blog posts, and more in your inbox.",
@@ -127,64 +125,26 @@ export function SocratifyFooter({
   className,
   onSubscribe,
 }: SocratifyFooterProps) {
-  const [resolvedTheme, setResolvedTheme] = React.useState<"light" | "dark">(theme);
   const [showThankYou, setShowThankYou] = React.useState(false);
-
-  // Auto-detect theme from document if theme prop is not explicitly set or is "auto"
-  React.useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const detectTheme = () => {
-      const isDark = document.documentElement.classList.contains("dark");
-      setResolvedTheme(isDark ? "dark" : "light");
-    };
-
-    detectTheme();
-
-    // Watch for theme changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === "class") {
-          detectTheme();
-        }
-      });
-    });
-
-    observer.observe(document.documentElement, { attributes: true });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const isLight = resolvedTheme === "light";
   const [emailError, setEmailError] = React.useState<string>("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const year = React.useMemo(() => new Date().getFullYear(), []);
 
   const themeStyles = {
-    root: isLight
-      ? "bg-background text-foreground border-border/20"
-      : "bg-foreground text-background border-background/10",
-    tagline: isLight ? "text-muted-foreground" : "text-slate-200/60",
-    sectionHeading: isLight ? "text-muted-foreground" : "text-slate-200",
-    link: isLight
-      ? "text-muted-foreground hover:text-primary"
-      : "text-background/70 hover:text-primary",
-    socialLink: isLight
-      ? "text-foreground/80 hover:text-primary"
-      : "text-background hover:text-primary",
-    socialBg: isLight
-      ? "bg-muted/80 border border-border"
-      : "bg-background/10 border border-background/10",
-    divider: isLight ? "border-border/20" : "border-muted-foreground/10",
+    root: "bg-background text-foreground border-border/20",
+    tagline: "text-muted-foreground",
+    sectionHeading: "text-muted-foreground",
+    link: "text-muted-foreground hover:text-primary",
+    socialLink: "text-foreground/80 hover:text-primary",
+    socialBg: "bg-muted/80 border border-border",
+    divider: "border-border/20",
     muted: "text-muted-foreground",
-    inputBg: isLight ? "bg-muted" : "bg-background/10",
-    inputBorder: isLight ? "border-border" : "border-background/20",
-    inputText: isLight ? "text-foreground" : "text-background",
-    inputPlaceholder: isLight
-      ? "placeholder:text-muted-foreground"
-      : "placeholder:text-background/70",
-    thankYouBg: isLight ? "bg-muted/70" : "bg-background/10",
+    inputBg: "bg-muted",
+    inputBorder: "border-border",
+    inputText: "text-foreground",
+    inputPlaceholder: "placeholder:text-muted-foreground",
+    thankYouBg: "bg-muted/70",
   };
 
   return (

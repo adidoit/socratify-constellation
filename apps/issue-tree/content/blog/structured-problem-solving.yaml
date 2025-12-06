@@ -1,0 +1,84 @@
+slug: blog/structured-problem-solving
+meta:
+  title: Structured Problem Solving - Why Smart People Struggle With Hard Problems | IssueTree
+  description: Intelligence isn't enough. Learn why structured problem solving beats raw brainpower every time.
+  section: Problem Solving
+
+hero:
+  label: Problem Solving
+  title: Why smart people struggle with hard problems
+  subtitle: Raw intelligence isn't enough. The best problem solvers use structure to see what others miss.
+
+content:
+  - type: paragraph
+    text: |
+      You've probably met someone brilliant who makes terrible decisions. Or watched a genius flail when faced with a messy, ambiguous problem. Intelligence helps, but it's not the whole story.
+
+  - type: paragraph
+    text: |
+      The difference between good and great problem solvers isn't IQ—it's process. Structured problem solving is a learnable skill that multiplies whatever brainpower you bring to the table.
+
+  - type: heading
+    level: 2
+    text: The trap of intuition
+
+  - type: paragraph
+    text: |
+      Smart people often trust their intuition too much. They pattern-match quickly, reach a plausible answer, and move on. But complex problems punish this approach.
+
+  - type: paragraph
+    text: |
+      Intuition works great for problems you've seen before. It fails spectacularly for novel situations, where your past experience actively misleads you.
+
+  - type: heading
+    level: 2
+    text: What structured problem solving looks like
+
+  - type: paragraph
+    text: |
+      Structure doesn't mean bureaucracy or slow thinking. It means having a deliberate process for decomposing problems, generating hypotheses, and testing assumptions.
+
+  - type: list
+    style: numbered
+    items:
+      - Define the problem precisely—what would success look like?
+      - Break it into component parts using frameworks like MECE
+      - Prioritize which parts matter most to the answer
+      - Develop hypotheses for each key component
+      - Gather data to test your hypotheses
+      - Synthesize insights into a clear recommendation
+
+  - type: heading
+    level: 2
+    text: Why structure beats brainpower
+
+  - type: paragraph
+    text: |
+      A structured approach has two huge advantages. First, it's auditable—you can see where your logic might be wrong. Second, it's improvable—you can get better at each step over time.
+
+  - type: paragraph
+    text: |
+      Unstructured thinking is a black box. When you get the wrong answer, you don't know why. When you get the right answer, you can't reliably repeat it.
+
+  - type: heading
+    level: 2
+    text: Getting started with structure
+
+  - type: paragraph
+    text: |
+      The best way to build this skill is practice. Take a problem you're working on and try to decompose it into parts. Ask yourself: are these parts MECE? What am I missing?
+
+  - type: paragraph
+    text: |
+      IssueTree is designed to be your practice partner. It helps you build the muscle memory of structured thinking until it becomes second nature.
+
+cta:
+  title: Build your structured thinking muscle
+  description: Start with a real problem you're facing and let IssueTree guide you through the decomposition.
+  primaryButton:
+    text: Try it free
+    href: /
+
+backLink:
+  href: /blog
+  label: Back to Blog

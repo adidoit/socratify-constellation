@@ -1,0 +1,71 @@
+slug: about
+meta:
+  title: "About Us | Your App Name"
+  description: "Learn about our mission, team, and the story behind our product."
+  section: "Company"
+  keywords:
+    - about us
+    - our mission
+    - team
+  publishedAt: "2024-01-01"
+  author: "Your Team"
+
+hero:
+  label: About
+  title: Building something meaningful
+  subtitle: We're on a mission to help people achieve more with less effort.
+
+content:
+  - type: paragraph
+    text: |
+      Welcome to our about page. This is where you tell your story and connect 
+      with your audience on a deeper level. Share your mission, values, and 
+      what makes your product unique.
+
+  - type: heading
+    level: 2
+    text: Our Mission
+
+  - type: paragraph
+    text: |
+      Describe your mission here. What problem are you solving? Why does your 
+      company exist? What impact do you want to make in the world?
+
+  - type: heading
+    level: 2
+    text: Our Story
+
+  - type: paragraph
+    text: |
+      Share the founding story. How did this all begin? What motivated the 
+      founders to start this company? People connect with authentic stories.
+
+  - type: blockquote
+    text: "The best way to predict the future is to create it."
+    attribution: Peter Drucker
+
+  - type: heading
+    level: 2
+    text: What We Believe
+
+  - type: list
+    style: bullet
+    items:
+      - Quality over quantity
+      - User experience matters
+      - Transparency builds trust
+      - Continuous improvement
+
+cta:
+  title: Ready to get started?
+  description: Join thousands of users who are already benefiting from our platform.
+  primaryButton:
+    text: Get Started Free
+    href: /signup
+  secondaryButton:
+    text: Learn More
+    href: /features
+
+backLink:
+  href: /
+  label: Back to Home

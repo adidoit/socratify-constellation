@@ -1,0 +1,74 @@
+slug: about
+meta:
+  title: "About Socratify Whiteboards"
+  description: "Learn about our architecture whiteboard tool - a focused canvas for visual thinking, critique, and collaboration."
+  section: "Company"
+  keywords:
+    - whiteboard
+    - architecture diagram
+    - visual thinking
+    - collaboration
+  publishedAt: "2024-01-01"
+  author: "Socratify Team"
+
+hero:
+  label: About
+  title: Visual thinking, simplified
+  subtitle: A focused whiteboard for architecture diagrams, system design, and collaborative critique.
+
+content:
+  - type: paragraph
+    text: |
+      Socratify Whiteboards is designed for one thing: helping you think visually 
+      about complex systems. No feature bloat, no distractions - just a roomy canvas 
+      and the tools you need to sketch, critique, and export.
+
+  - type: heading
+    level: 2
+    text: Why Another Whiteboard?
+
+  - type: paragraph
+    text: |
+      Most whiteboard tools try to do everything. We focus on architecture diagrams 
+      and system design. This means a cleaner interface, better defaults for technical 
+      drawings, and AI-powered critique that understands software architecture.
+
+  - type: heading
+    level: 2
+    text: Key Features
+
+  - type: list
+    style: bullet
+    items:
+      - Roomy, distraction-free canvas
+      - Architecture-focused shape library
+      - AI critique for your diagrams
+      - Export to PNG, SVG, and more
+      - Real-time collaboration
+
+  - type: blockquote
+    text: "The best diagram is the one that helps you think, not the prettiest one."
+
+  - type: heading
+    level: 2
+    text: Part of Socratify
+
+  - type: paragraph
+    text: |
+      Whiteboards is part of the Socratify suite of thinking tools. We help people 
+      think more clearly about complex problems through structured frameworks and 
+      visual thinking.
+
+cta:
+  title: Ready to start sketching?
+  description: Jump into a blank canvas and start thinking visually.
+  primaryButton:
+    text: Open Whiteboard
+    href: /whiteboard
+  secondaryButton:
+    text: View Examples
+    href: /examples
+
+backLink:
+  href: /
+  label: Back to Home
