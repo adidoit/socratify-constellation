@@ -150,6 +150,9 @@ importers:
       '@constellation/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@eslint/eslintrc':
+        specifier: ^3.3.3
+        version: 3.3.3
       '@playwright/test':
         specifier: ^1.57.0
         version: 1.57.0
