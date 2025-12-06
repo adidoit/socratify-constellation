@@ -216,7 +216,7 @@ const LandingPageContent: React.FC = () => {
 
   return (
     <AppShell>
-      <div className="flex-1 flex flex-col items-center justify-center px-4 relative">
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 relative">
         {/* Heading */}
         <div className="flex flex-col items-center gap-3 mb-12">
           <h1 className="text-display-lg text-center leading-tight max-w-4xl">

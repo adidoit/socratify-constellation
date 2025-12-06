@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { SocratifyFooter } from '@constellation/ui';
 import { SocratifyBranding } from './components/SocratifyBranding';
+import { TopNav } from './components/TopNav';
 
 const ExcalidrawBoard = dynamic(() => import('./components/ExcalidrawBoard'), {
   ssr: false,
@@ -11,7 +12,12 @@ const ExcalidrawBoard = dynamic(() => import('./components/ExcalidrawBoard'), {
 export default function HomePage() {
   return (
     <>
-      <main className="min-h-screen bg-background">
+      <main className="min-h-screen bg-background relative">
+        {/* Top navigation */}
+        <div className="absolute top-0 right-0 pr-10 pt-6 z-10">
+          <TopNav />
+        </div>
+
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 pb-12 pt-10 lg:px-8">
           <div className="flex flex-col gap-2">
             <span className="text-label text-muted-foreground">
@@ -31,7 +37,7 @@ export default function HomePage() {
         </div>
       </main>
 
-      <SocratifyFooter className="mt-12" />
+      <SocratifyFooter />
     </>
   );
 }

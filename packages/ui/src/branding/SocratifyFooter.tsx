@@ -5,7 +5,6 @@ import {
   Facebook,
   Instagram,
   Linkedin,
-  Sparkles,
   Twitter,
   Youtube,
 } from "lucide-react";
@@ -27,6 +26,8 @@ export type SocratifyFooterProps = {
   brandName?: string;
   brandHref?: string;
   brandTagline?: string;
+  brandLogoUrl?: string;
+  brandLogoAlt?: string;
   contactEmail?: string;
   companyLinks?: FooterLink[];
   legalLinks?: FooterLink[];
@@ -100,10 +101,14 @@ const defaultLegalLinks: FooterLink[] = [
   { name: "Privacy Policy", href: "/privacy" },
 ];
 
+const DEFAULT_LOGO_URL = "https://cdn.socratify.com/socratify.logo.transparent.png";
+
 export function SocratifyFooter({
   brandName = "socratify",
   brandHref = "/",
   brandTagline = "AI products that upgrade humans",
+  brandLogoUrl = DEFAULT_LOGO_URL,
+  brandLogoAlt = "Socratify logo",
   contactEmail = "hello@socratify.com",
   socialLinks = defaultSocialLinks,
   companyLinks = defaultCompanyLinks,
@@ -122,8 +127,35 @@ export function SocratifyFooter({
   className,
   onSubscribe,
 }: SocratifyFooterProps) {
-  const isLight = theme === "light";
+  const [resolvedTheme, setResolvedTheme] = React.useState<"light" | "dark">(theme);
   const [showThankYou, setShowThankYou] = React.useState(false);
+
+  // Auto-detect theme from document if theme prop is not explicitly set or is "auto"
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const detectTheme = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setResolvedTheme(isDark ? "dark" : "light");
+    };
+
+    detectTheme();
+
+    // Watch for theme changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          detectTheme();
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const isLight = resolvedTheme === "light";
   const [emailError, setEmailError] = React.useState<string>("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -158,22 +190,31 @@ export function SocratifyFooter({
   return (
     <footer
       className={cn(
-        "border-t",
+        "border-t w-full",
         themeStyles.root,
         className
       )}
     >
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
-          <div className="space-y-6">
+      <div className="w-full max-w-5xl mx-auto px-6 py-12 sm:px-8 sm:py-16">
+        {/* Main footer content */}
+        <div className="flex flex-col gap-10 lg:flex-row lg:justify-between lg:gap-16">
+          {/* Brand section */}
+          <div className="flex flex-col gap-6 lg:max-w-xs">
             {brandSlot ?? (
               <a href={brandHref} className="inline-block">
-                <h2 className="text-3xl font-extrabold lowercase font-display">
-                  {brandName}
-                </h2>
+                <div className="flex items-center gap-3">
+                  <img
+                    src={brandLogoUrl}
+                    alt={brandLogoAlt}
+                    className="h-9 w-9 rounded-lg border border-border bg-background object-contain"
+                  />
+                  <h2 className="text-2xl font-extrabold lowercase font-display">
+                    {brandName}
+                  </h2>
+                </div>
                 <p
                   className={cn(
-                    "mt-1 max-w-[400px] text-sm",
+                    "mt-2 text-sm leading-relaxed",
                     themeStyles.tagline
                   )}
                 >
@@ -181,7 +222,8 @@ export function SocratifyFooter({
                 </p>
               </a>
             )}
-            <div className="flex space-x-5">
+            {/* Social links - responsive wrap */}
+            <div className="flex flex-wrap gap-3">
               {socialLinks.map((social) => (
                 <a
                   key={social.name}
@@ -194,7 +236,7 @@ export function SocratifyFooter({
                 >
                   <span
                     className={cn(
-                      "inline-flex h-10 w-10 items-center justify-center rounded-full",
+                      "inline-flex h-9 w-9 items-center justify-center rounded-full",
                       themeStyles.socialBg
                     )}
                   >
@@ -205,64 +247,70 @@ export function SocratifyFooter({
             </div>
           </div>
 
-          <div>
-            <h3
-              className={cn(
-                "mb-4 text-sm font-semibold uppercase tracking-wider",
-                themeStyles.sectionHeading
-              )}
-            >
-              Company
-            </h3>
-            <ul className="space-y-3">
-              {companyLinks.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className={cn(
-                      "transition-colors duration-200",
-                      themeStyles.link
-                    )}
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Links sections */}
+          <div className="flex flex-wrap gap-12 sm:gap-16">
+            <div>
+              <h3
+                className={cn(
+                  "mb-3 text-xs font-semibold uppercase tracking-wider",
+                  themeStyles.sectionHeading
+                )}
+              >
+                Company
+              </h3>
+              <ul className="space-y-2">
+                {companyLinks.map((link) => (
+                  <li key={link.name}>
+                    <a
+                      href={link.href}
+                      className={cn(
+                        "text-sm transition-colors duration-200",
+                        themeStyles.link
+                      )}
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div>
-            <h3
-              className={cn(
-                "mb-4 text-sm font-semibold uppercase tracking-wider",
-                themeStyles.sectionHeading
-              )}
-            >
-              Legal
-            </h3>
-            <ul className="space-y-3">
-              {legalLinks.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className={cn(
-                      "transition-colors duration-200",
-                      themeStyles.link
-                    )}
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <div>
+              <h3
+                className={cn(
+                  "mb-3 text-xs font-semibold uppercase tracking-wider",
+                  themeStyles.sectionHeading
+                )}
+              >
+                Legal
+              </h3>
+              <ul className="space-y-2">
+                {legalLinks.map((link) => (
+                  <li key={link.name}>
+                    <a
+                      href={link.href}
+                      className={cn(
+                        "text-sm transition-colors duration-200",
+                        themeStyles.link
+                      )}
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
+        {/* Subscribe section */}
         {enableSubscribe && (
-          <div className="mt-16 pt-8">
-            <div className="mx-auto max-w-2xl text-center">
-              <h2 className="mb-4 text-xl font-bold">{subscribeCta}</h2>
-              <p className="mb-8 text-lg">{subscribeDescription}</p>
+          <div className="mt-12 pt-8 border-t border-inherit">
+            <div className="max-w-xl">
+              <h2 className="mb-2 text-lg font-bold">{subscribeCta}</h2>
+              <p className={cn("mb-6 text-sm", themeStyles.tagline)}>
+                {subscribeDescription}
+              </p>
 
               {!showThankYou ? (
                 <form
@@ -300,7 +348,7 @@ export function SocratifyFooter({
                       setIsSubmitting(false);
                     }
                   }}
-                  className="mx-auto flex max-w-xl flex-col gap-4 sm:flex-row"
+                  className="flex flex-col gap-3 sm:flex-row"
                 >
                   <div className="flex-1">
                     <input
@@ -308,7 +356,7 @@ export function SocratifyFooter({
                       name="email"
                       placeholder={inputPlaceholder}
                       className={cn(
-                        "w-full rounded-lg border px-6 py-4 text-lg outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20",
+                        "w-full rounded-lg border px-4 py-3 text-sm outline-none transition-all duration-200 focus:border-primary focus:ring-2 focus:ring-primary/20",
                         themeStyles.inputBg,
                         themeStyles.inputPlaceholder,
                         themeStyles.inputText,
@@ -318,14 +366,14 @@ export function SocratifyFooter({
                       disabled={isSubmitting}
                     />
                     {emailError && (
-                      <span className="mt-1 block text-left text-sm text-red-400">
+                      <span className="mt-1 block text-left text-xs text-red-400">
                         {emailError}
                       </span>
                     )}
                   </div>
                   <button
                     type="submit"
-                    className="rounded-lg bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground transition-all duration-300 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={isSubmitting}
                   >
                     {isSubmitting
@@ -336,13 +384,13 @@ export function SocratifyFooter({
               ) : (
                 <div
                   className={cn(
-                    "mx-auto max-w-xl rounded-lg p-4 text-center",
+                    "rounded-lg p-4",
                     themeStyles.thankYouBg
                   )}
                 >
-                  <div className="flex items-center justify-center gap-3">
-                    <span className="text-3xl">{thankYouIcon}</span>
-                    <h3 className="text-lg font-bold text-slate-100">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{thankYouIcon}</span>
+                    <h3 className="text-sm font-bold">
                       {subscribeSuccessTitle}
                     </h3>
                   </div>
@@ -351,24 +399,27 @@ export function SocratifyFooter({
             </div>
           </div>
         )}
-
       </div>
+
+      {/* Bottom bar */}
       <div
         className={cn(
           "border-t",
           themeStyles.divider
         )}
       >
-        <div className="container mx-auto px-4 py-6 text-center space-y-2">
-          <p className={cn("text-sm", themeStyles.muted)}>
-            &copy; {year} Socratify AI Inc. All rights reserved.
-          </p>
-          <p className={cn("text-sm", themeStyles.muted)}>
-            Questions? Email us at{" "}
-            <a href={`mailto:${contactEmail}`} className="underline">
-              {contactEmail}
-            </a>
-          </p>
+        <div className="w-full max-w-5xl mx-auto px-6 py-5 sm:px-8">
+          <div className="flex flex-col gap-2 text-center sm:flex-row sm:justify-between sm:text-left">
+            <p className={cn("text-xs", themeStyles.muted)}>
+              &copy; {year} Socratify AI Inc. All rights reserved.
+            </p>
+            <p className={cn("text-xs", themeStyles.muted)}>
+              Questions?{" "}
+              <a href={`mailto:${contactEmail}`} className="underline hover:no-underline">
+                {contactEmail}
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

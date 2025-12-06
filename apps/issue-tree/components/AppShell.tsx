@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Menu } from "lucide-react";
 import { Sidebar, type HistoryItem } from "@/components/Sidebar";
 import { CollapsedSidebar } from "@/components/CollapsedSidebar";
+import { TopNav } from "@/components/TopNav";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -153,12 +154,15 @@ export function AppShell({ children }: AppShellProps) {
   }, [isSignedIn]);
 
   const isHome = pathname === "/";
+  const isStaticPage = pathname === "/about" || pathname === "/blog";
+  const isTreePage = pathname?.startsWith("/t/");
 
-  // On the home page, only show the sidebar once we've confirmed there is history
-  // to avoid an initial flash/shift when history is empty. On all other pages,
-  // always show the sidebar.
+  // Hide sidebar on static pages (about, blog) and on home page when there's no history
   const shouldShowSidebar =
-    !isHome || (!isHistoryLoading && history.length > 0);
+    !isStaticPage && (!isHome || (!isHistoryLoading && history.length > 0));
+
+  // Hide absolute TopNav on tree pages (they have their own header with TopNav)
+  const shouldShowAbsoluteTopNav = !isTreePage;
 
   const sidebarContextValue: SidebarContextType = {
     isCollapsed,
@@ -206,8 +210,21 @@ export function AppShell({ children }: AppShellProps) {
             <span className="text-sm font-semibold text-foreground">Issue Tree AI</span>
           </div>
 
-          {/* Spacer to center the logo/title */}
-          <div className="w-9" />
+          {/* Mobile nav links */}
+          <nav className="flex items-center gap-4">
+            <a
+              href="/about"
+              className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              About
+            </a>
+            <a
+              href="/blog"
+              className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Blog
+            </a>
+          </nav>
         </header>
 
         <div className="flex flex-1 overflow-hidden relative">
@@ -231,7 +248,15 @@ export function AppShell({ children }: AppShellProps) {
             </div>
           )}
 
-          <main className="flex-1 flex flex-col overflow-hidden">{children}</main>
+          <main className="flex-1 flex flex-col overflow-y-auto">
+            {/* Desktop top navigation - positioned absolute top-right (hidden on tree pages which have their own header) */}
+            {shouldShowAbsoluteTopNav && (
+              <div className="hidden md:block absolute top-0 right-0 pr-10 pt-6 z-10">
+                <TopNav />
+              </div>
+            )}
+            {children}
+          </main>
         </div>
       </div>
 
