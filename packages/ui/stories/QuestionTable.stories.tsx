@@ -15,6 +15,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/mckinsey.com",
     industry: "Aviation",
     type: "Operations",
+    difficulty: 2,
   },
   {
     id: "2",
@@ -23,6 +24,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/bcg.com",
     industry: "Healthcare",
     type: "Strategy",
+    difficulty: 1,
   },
   {
     id: "3",
@@ -31,6 +33,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/bain.com",
     industry: "Automotive",
     type: "Marketing",
+    difficulty: 3,
   },
   {
     id: "4",
@@ -39,6 +42,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/goldmansachs.com",
     industry: "Financial Services",
     type: "M&A",
+    difficulty: 3,
   },
   {
     id: "5",
@@ -47,6 +51,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/deloitte.com",
     industry: "Technology",
     type: "Pricing",
+    difficulty: 2,
   },
   {
     id: "6",
@@ -55,6 +60,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/accenture.com",
     industry: "Retail",
     type: "Supply Chain",
+    difficulty: 2,
   },
   {
     id: "7",
@@ -63,6 +69,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/kkr.com",
     industry: "Private Equity",
     type: "Due Diligence",
+    difficulty: 3,
   },
   {
     id: "8",
@@ -71,6 +78,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/oliverwyman.com",
     industry: "Consumer Goods",
     type: "Market Entry",
+    difficulty: 1,
   },
   {
     id: "9",
@@ -79,6 +87,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/mckinsey.com",
     industry: "Technology",
     type: "Strategy",
+    difficulty: 1,
   },
   {
     id: "10",
@@ -87,6 +96,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/bcg.com",
     industry: "Media",
     type: "Strategy",
+    difficulty: 2,
   },
   {
     id: "11",
@@ -95,6 +105,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/bain.com",
     industry: "Hospitality",
     type: "Marketing",
+    difficulty: 1,
   },
   {
     id: "12",
@@ -103,6 +114,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/mckinsey.com",
     industry: "Agriculture",
     type: "Operations",
+    difficulty: 3,
   },
   {
     id: "13",
@@ -111,6 +123,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/bcg.com",
     industry: "Aviation",
     type: "Strategy",
+    difficulty: 3,
   },
   {
     id: "14",
@@ -119,6 +132,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/deloitte.com",
     industry: "Financial Services",
     type: "Digital",
+    difficulty: 2,
   },
   {
     id: "15",
@@ -127,6 +141,7 @@ const sampleQuestions: Question[] = [
     logoUrl: "https://logo.clearbit.com/goldmansachs.com",
     industry: "Healthcare",
     type: "M&A",
+    difficulty: 3,
   },
 ];
 
@@ -187,6 +202,7 @@ export const WithPagination: Story = {
       company: null,
       industry: null,
       type: null,
+      difficulty: null,
     });
 
     // Simulate server-side filtering
@@ -195,6 +211,7 @@ export const WithPagination: Story = {
         if (filters.company && q.company !== filters.company) return false;
         if (filters.industry && q.industry !== filters.industry) return false;
         if (filters.type && q.type !== filters.type) return false;
+        if (filters.difficulty && q.difficulty !== filters.difficulty) return false;
         return true;
       });
     }, [filters]);
@@ -251,6 +268,7 @@ export const WithPaginationDark: Story = {
       company: null,
       industry: null,
       type: null,
+      difficulty: null,
     });
 
     const filteredQuestions = useMemo(() => {
@@ -258,6 +276,7 @@ export const WithPaginationDark: Story = {
         if (filters.company && q.company !== filters.company) return false;
         if (filters.industry && q.industry !== filters.industry) return false;
         if (filters.type && q.type !== filters.type) return false;
+        if (filters.difficulty && q.difficulty !== filters.difficulty) return false;
         return true;
       });
     }, [filters]);
@@ -329,6 +348,7 @@ export const FilteredEmpty: Story = {
       company: "NonExistent",
       industry: null,
       type: null,
+      difficulty: null,
     });
 
     return (

@@ -10,6 +10,7 @@ export interface Question {
   logoUrl: string;
   industry?: string;
   type?: string;
+  difficulty?: 1 | 2 | 3;
 }
 
 export interface AnswerState {
@@ -38,7 +39,8 @@ export const CompanyInterviewQuestionCard: React.FC<QuestionCardProps> = ({
 }) => {
   const isDark = variant === "dark";
   const [isPressed, setIsPressed] = useState(false);
-  const showFullContext = layout === "full-context" && (question.industry || question.type);
+  const showFullContext =
+    layout === "full-context" && (question.industry || question.type);
 
   const handleMouseDown = () => setIsPressed(true);
   const handleMouseUp = () => setIsPressed(false);
@@ -53,6 +55,11 @@ export const CompanyInterviewQuestionCard: React.FC<QuestionCardProps> = ({
     .filter(Boolean)
     .join(" · ");
 
+  // Difficulty label
+  const difficultyLabel = question.difficulty
+    ? { 1: "Easy", 2: "Medium", 3: "Hard" }[question.difficulty]
+    : null;
+
   return (
     <div
       onClick={handleClick}
@@ -64,7 +71,7 @@ export const CompanyInterviewQuestionCard: React.FC<QuestionCardProps> = ({
       className={cn(
         // Base layout
         "group relative flex flex-col justify-between",
-        "w-full aspect-square p-8",
+        "w-full max-w-[320px] aspect-square p-8",
         "rounded-[28px] cursor-pointer overflow-hidden",
         "select-none",
 
@@ -143,6 +150,19 @@ export const CompanyInterviewQuestionCard: React.FC<QuestionCardProps> = ({
         >
           {question.text}
         </h3>
+        {/* Difficulty badge */}
+        {difficultyLabel && (
+          <span
+            className={cn(
+              "inline-block mt-3 px-2.5 py-1 rounded-full text-xs font-medium",
+              "transition-colors duration-300",
+              !isDark && "bg-stone-100 text-stone-500 group-hover:bg-stone-200 group-hover:text-stone-600",
+              isDark && "bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 group-hover:text-zinc-300"
+            )}
+          >
+            {difficultyLabel}
+          </span>
+        )}
       </div>
 
       {/* Footer: Logo and Company Info */}

@@ -18,6 +18,7 @@ export interface QuestionTableFilters {
   company: string | null;
   industry: string | null;
   type: string | null;
+  difficulty: 1 | 2 | 3 | null;
 }
 
 // Pagination state type
@@ -91,6 +92,7 @@ export function QuestionTable({
     company: null,
     industry: null,
     type: null,
+    difficulty: null,
   });
 
   const activeFilters = filters ?? internalFilters;
@@ -112,18 +114,32 @@ export function QuestionTable({
     return [...new Set(questions.map((q) => q.type).filter(Boolean) as string[])].sort();
   }, [types, questions]);
 
+  // Filter questions based on active filters (for uncontrolled/client-side filtering)
+  const filteredQuestions = useMemo(() => {
+    // If using controlled filters with external data, assume parent handles filtering
+    if (filters && pagination) return questions;
+
+    return questions.filter((q) => {
+      if (activeFilters.company && q.company !== activeFilters.company) return false;
+      if (activeFilters.industry && q.industry !== activeFilters.industry) return false;
+      if (activeFilters.type && q.type !== activeFilters.type) return false;
+      if (activeFilters.difficulty && q.difficulty !== activeFilters.difficulty) return false;
+      return true;
+    });
+  }, [questions, activeFilters, filters, pagination]);
+
   // Calculate pagination display
   const startItem = pagination
     ? (pagination.page - 1) * pagination.pageSize + 1
     : 1;
   const endItem = pagination
     ? Math.min(pagination.page * pagination.pageSize, pagination.totalItems)
-    : questions.length;
-  const totalItems = pagination?.totalItems ?? questions.length;
+    : filteredQuestions.length;
+  const totalItems = pagination?.totalItems ?? filteredQuestions.length;
 
-  const handleFilterChange = (
-    key: keyof QuestionTableFilters,
-    value: string | null
+  const handleFilterChange = <K extends keyof QuestionTableFilters>(
+    key: K,
+    value: QuestionTableFilters[K]
   ) => {
     handleFiltersChange({
       ...activeFilters,
@@ -138,12 +154,13 @@ export function QuestionTable({
       company: null,
       industry: null,
       type: null,
+      difficulty: null,
     });
     onPageChange?.(1);
   };
 
   const hasActiveFilters =
-    activeFilters.company || activeFilters.industry || activeFilters.type;
+    activeFilters.company || activeFilters.industry || activeFilters.type || activeFilters.difficulty;
 
   // Grid column classes
   const gridColsClass = {
@@ -243,6 +260,30 @@ export function QuestionTable({
           </Select>
         )}
 
+        {/* Difficulty Filter */}
+        <Select
+          value={activeFilters.difficulty?.toString() ?? "all"}
+          onValueChange={(v) =>
+            handleFilterChange("difficulty", v === "all" ? null : (Number(v) as 1 | 2 | 3))
+          }
+        >
+          <SelectTrigger
+            className={cn(
+              "w-[130px] h-9 text-sm",
+              !isDark && "bg-white border-stone-200 text-stone-900",
+              isDark && "bg-zinc-800 border-zinc-700 text-zinc-100"
+            )}
+          >
+            <SelectValue placeholder="Difficulty" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All levels</SelectItem>
+            <SelectItem value="1">Easy</SelectItem>
+            <SelectItem value="2">Medium</SelectItem>
+            <SelectItem value="3">Hard</SelectItem>
+          </SelectContent>
+        </Select>
+
         {/* Clear Filters */}
         {hasActiveFilters && (
           <Button
@@ -290,7 +331,7 @@ export function QuestionTable({
             />
           ))}
         </div>
-      ) : questions.length === 0 ? (
+      ) : filteredQuestions.length === 0 ? (
         // Empty state
         <div
           className={cn(
@@ -317,7 +358,7 @@ export function QuestionTable({
           className={cn("grid", gridColsClass)}
           style={{ gap: `${gap}px` }}
         >
-          {questions.map((question) => (
+          {filteredQuestions.map((question) => (
             <CompanyInterviewQuestionCard
               key={question.id}
               question={question}
