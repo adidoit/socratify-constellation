@@ -60,20 +60,34 @@ export const CompanyInterviewQuestionCard: React.FC<QuestionCardProps> = ({
     ? { 1: "Easy", 2: "Medium", 3: "Hard" }[question.difficulty]
     : null;
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onClick(question);
+    }
+  };
+
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleMouseDown}
       onTouchEnd={handleMouseUp}
+      aria-pressed={isSelected}
       className={cn(
         // Base layout
         "group relative flex flex-col justify-between",
         "w-full max-w-[320px] aspect-square p-8",
         "rounded-[28px] cursor-pointer overflow-hidden",
-        "select-none",
+        "select-none outline-none",
+        "focus-visible:ring-2 focus-visible:ring-offset-2",
+        !isDark && "focus-visible:ring-amber-500",
+        isDark && "focus-visible:ring-amber-400 focus-visible:ring-offset-zinc-900",
 
         // Press animation with spring-like easing
         "transition-all duration-200",

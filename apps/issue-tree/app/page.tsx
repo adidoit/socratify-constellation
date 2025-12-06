@@ -7,7 +7,7 @@ import type { IssueNode } from "@/types";
 import { ArrowRight, Loader2, Megaphone, TrendingDown, TrendingUp } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { SocratifyBranding } from "@/components/SocratifyBranding";
-import { MagicLinkModal } from "@constellation/ui";
+import { MagicLinkModal, SocratifyFooter } from "@constellation/ui";
 
 const PENDING_PROBLEM_KEY = "issue-tree:pending-problem";
 
@@ -307,6 +307,8 @@ const LandingPageContent: React.FC = () => {
         title="Sign in to continue"
         subtitle="We’ll email you a magic link to resume your tree."
       />
+
+      <SocratifyFooter className="mt-12" />
 
       {isResuming && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur">

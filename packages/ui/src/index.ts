@@ -23,4 +23,5 @@ export * from './ui/company-interview-question-card-grid';
 export * from './ui/question-table';
 export * from './auth/MagicLinkModal';
 export * from './auth/useAuthGate';
+export * from './branding/SocratifyFooter';
 export * from './branding/SocratifyBranding';
